@@ -34,13 +34,13 @@ library(knitr)
 
 # Introduction
 
-This vignette demonstrates how to perform robust survival and statistical analyses using LundTaxR, focusing on two key functions: `get_glm` and `get_survival`. These functions streamline the process of running general linear models and Cox proportional hazards models on your molecular subtype and signature score data, integrating seamlessly with your sample metadata. Both functions handle common preprocessing steps internally, such as binning numeric variables and wrangling prediction outputs, so you can focus on interpreting results.
+This vignette demonstrates how to perform robust survival and statistical analyses using LundTaxR, focusing on two key functions: `get_glm` and `get_survival`. These functions streamline the process of running generalized linear models and Cox proportional hazards models using your molecular subtype and signature score data, integrating seamlessly with your sample metadata. Both functions handle common preprocessing steps internally, such as binning numeric variables and wrangling prediction outputs, so you can focus on interpreting results.
 
 ---
 
-## 1. General Linear Model Analysis with `get_glm`
+## 1. Generalized Linear Model Analysis with `get_glm`
 
-The `get_glm` function enables you to test associations between molecular signature scores (or other predictors) and categorical variables of interest (such as response, grade, gender, or region). It supports both Mann-Whitney tests and general linear regression, and can be customized to focus on specific subtypes or predictor sets.
+The `get_glm` function enables you to test associations between molecular signature scores (or other predictors) and categorical variables of interest (such as response, grade, gender, or region). It supports both Mann-Whitney tests and generalized linear regression, and can be customized to focus on specific subtypes or predictor sets.
 
 ### Example 1: Testing Signature Scores by Gender
 

@@ -21,7 +21,7 @@
 
 > **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
 
-LundTaxR implements a comprehensive Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy, enabling precise molecular characterization.
+LundTaxR implements a Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy, enabling precise molecular characterization.
 
 ## Overviews
 
@@ -94,16 +94,16 @@ For a more comprehensive tutorial and usage examples, please refer to the vignet
 ## Classification System
 
 ### Main Subtypes (5-class)
-- **Uro** (Urothelial-like): Resembles normal urothelium
-- **GU** (Genomically Unstable): High mutation burden
-- **BaSq** (Basal/Squamous): Aggressive
-- **Mes** (Mesenchymal): Stromal-rich
-- **ScNE** (Small cell/Neuroendocrine): Rare, very aggressive subtype
+- **Uro** (Urothelial-like): Luminal, resembles urothelium
+- **GU** (Genomically Unstable): Luminal, complex genome, lacking basal cells
+- **BaSq** (Basal/Squamous): Non-luminal, basal- or squamous-like characteristics
+- **Mes** (Mesenchymal): Non-luminal, mesenchymal/sarcomatoid cancer cells or extremely stroma-rich biopsy
+- **ScNE** (Small cell/Neuroendocrine): Non-luminal, very aggressive subtype often with neuroendocrine histology 
 
 ### Uro Subclasses (7-class)
-- **UroA**: Papillary-like features
-- **UroB**: Mixed characteristics  
-- **UroC**: Progression-prone subset
+- **UroA**: Intact basal cell stratification
+- **UroB**: Extended basal cell stratification
+- **UroC**: Absent or discontinuous stratification
 
 ## Documentation
 

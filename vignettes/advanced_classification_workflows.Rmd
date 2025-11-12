@@ -49,7 +49,7 @@ This advanced guide is designed for researchers and bioinformaticians who want t
 - Fine-tune classification parameters for optimal performance on their datasets
 - Understand the impact of preprocessing and imputation settings
 - Explore confidence scoring and progression risk thresholding
-- Build reproducible analytical pipelines for publication-quality research
+- Build reproducible analytical pipelines for improved consistency in research
 
 ## What You'll Learn
 
@@ -118,7 +118,7 @@ print(confidence_by_subtype)
 
 ### Log Transformation Control
 
-LundTaxR automatically detects whether your data is log-transformed, but you can override this behavior. **Note: Log transformation primarily affects signature score calculations, not the classifier predictions themselves.**
+LundTaxR automatically detects whether your data is log2-transformed, but you can override this behavior. **Note: Log2 transformation primarily affects signature score calculations, not the classifier predictions themselves.**
 
 **⚠️ CRITICAL: Signature score calculations require log2-transformed values.** If your input data is already log2-transformed and you set `log_transform = TRUE`, the signature scores will be calculated on double-logged data, leading to incorrect results. Conversely, if your data is raw (non-logged) and you set `log_transform = FALSE`, signature scores will be calculated on untransformed data, which is also incorrect.
 
@@ -164,7 +164,7 @@ cat("Mean immune score - Double-logged:", round(mean(double_logged_results$score
 
 ### Score Adjustment and Normalization
 
-The adjustment parameters are crucial for **signature score calculations** but do not affect the classifier predictions. These parameters control how signature scores are normalized based on stable reference genes:
+The adjustment parameters are crucial for **signature score calculations** but do not affect the classifier subtype predictions. These parameters control how signature scores are normalized based on stable reference genes:
 
 ```{r adjustment-examples}
 # Classification without score adjustment
