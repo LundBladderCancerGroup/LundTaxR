@@ -70,21 +70,17 @@ int_calc_signatures = function(this_data = NULL,
   
   #grade
   #WHO 1999 (G3 vs G1/2)
-  results_g3 = int_predict_grade(this_data = this_data, 
-                                 grade_predictor = classifier_grade3, 
-                                 gene_id = gene_id, 
-                                 impute = impute, 
-                                 impute_reject = impute_reject, 
-                                 impute_kNN = impute_kNN, 
+  results_g3 = int_predict_grade(data = this_data,
+                                 classifier = classifier_grade_who_1999,
+                                 grade_threshold = 0.5, 
+                                 grade_labels = c("G1G2", "G3"), 
                                  verbose = verbose)
 
   #WHO 2004/2016 (HG vs LG)
-  results_hg = int_predict_grade(this_data = this_data, 
-                                 grade_predictor = classifier_hg, 
-                                 gene_id = gene_id, 
-                                 impute = impute, 
-                                 impute_reject = impute_reject, 
-                                 impute_kNN = impute_kNN, 
+  results_hg = int_predict_grade(data = this_data,
+                                 classifier = classifier_grade_who_2022,
+                                 grade_threshold = 0.5, 
+                                 grade_labels = c("LG", "HG"),
                                  verbose = verbose)
 
   #immune
@@ -109,10 +105,10 @@ int_calc_signatures = function(this_data = NULL,
   }
   
   merge_scores = cbind(proliferation_score = results_proliferation$sig_score$Score,
-                       molecular_grade_who_1999 = results_g3$predictions_classes,
-                       molecular_grade_who_1999_score = results_g3$predictions[,"G3"],
-                       molecular_grade_who_2022 = results_hg$predictions_classes,
-                       molecular_grade_who_2022_score = results_hg$predictions[,"HG"],
+                       molecular_grade_who_1999 = results_g3$predicted_class,
+                       molecular_grade_who_1999_score = results_g3$prediction_score,
+                       molecular_grade_who_2022 = results_hg$predicted_class,
+                       molecular_grade_who_2022_score = results_hg$prediction_score,
                        progression_score = score_progression$sig_score$Score,
                        progression_risk = results_progression,
                        results_immune$sig_score, 

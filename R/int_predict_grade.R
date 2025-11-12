@@ -1,92 +1,110 @@
 #' @title Predict Tumor Grade
-#'
-#' @description Function for predicting grade using random forest and the bundled classifiers.
-#'
-#' @details Internal function called by [LundTaxR::int_calc_signatures()]. 
-#' Not meant for out of package use. This function is internally calling 
-#' [multiclassPairs::predict_RF()] to run a random forest prediction using one of the two bundled 
-#' classifiers for grade prediction.
-#'
-#' @param this_data Required parameter. Data frame or matrix with expression values.
-#' @param grade_predictor Required parameter, the predictor needed for grading. Should be one of the
-#' following bundled classifiers (classifier_GRADE3 or classifier_HG).
-#' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are; 
-#' hgnc_symbol (default) or ensembl_gene_id.
-#' @param impute From [multiclassPairs::predict_RF()]. Boolean. To determine if missed genes and NA 
-#' values should be imputed or not. The non missed rules will be used to detemine the closest 
-#' samples in the training binary matrix (i.e. which is stored in the classifier object). For each 
-#' sample, the mode value for nearest samples in the training data will be assigned to the missed 
-#' rules. Default is FALSE.
-#' @param impute_reject From [multiclassPairs::predict_RF()]. A number between 0 and 1 indicating 
-#' the threshold of the missed rules in the sample. Based on this threshold the sample will be 
-#' rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not 
-#' be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results 
-#' for this sample.
-#' @param impute_kNN From [multiclassPairs::predict_RF()]. Integer determines the number of the 
-#' nearest samples in the training data to be used in the imputation. Default is 5. It is not 
-#' recommended to use large number (i.e. >10).
-#' @param verbose A logical value indicating whether processing messages will be printed or not. 
-#' Default is TRUE.
-#'
-#' @return A data frame with grade results.
-#'
-#' @importFrom multiclassPairs predict_RF
 #' 
+#' @description Apply SwitchBox Classifier to Gene Expression Data
+#' 
+#' @details Internal function called by [LundTaxR::int_calc_signatures()]. 
+#' Not meant for out of package use. This function applies a pre-trained SwitchBox classifier to 
+#' gene expression data to predict molecular tumor grades. The classifier uses Top Scoring Pairs 
+#' (TSPs) methodology, comparing expression levels between gene pairs to generate predictions.
+#' Each rule evaluates whether gene1 > gene2, and satisfied rules contribute their
+#' weights to the final score. 
+#'
+#' @param data Gene expression matrix (genes × samples). Row names must be gene identifiers.
+#' @param classifier SwitchBox classifier object with $TSPs, $score components
+#' @param grade_threshold Numeric cutoff for binary classification (default 0.5)
+#' @param grade_labels Character vector of length 2: c("low_label", "high_label")
+#' @param verbose Print diagnostic information
+#'
+#' @return Data frame with sample IDs as row names and two columns:
+#'   \describe{
+#'     \item{prediction_score}{Numeric scores (0-1 scale)}
+#'     \item{predicted_class}{Character classification based on threshold}
+#'   }
+#'
 #' @examples
 #' \dontrun{
 #' # No examples provided
 #' }
 #' 
-int_predict_grade = function(this_data = NULL, 
-                             grade_predictor = NULL,
-                             gene_id = "hgnc_symbol",
-                             impute = FALSE, 
-                             impute_reject = 0.67, 
-                             impute_kNN = 5, 
-                             verbose = TRUE){
+int_predict_grade <- function(data, 
+                              classifier, 
+                              grade_threshold = 0.5,
+                              grade_labels = NULL,
+                              verbose = TRUE){
   
-  #check the incoming data
-  if(!class(this_data)[1] %in% c("data.frame","matrix")){
-    stop("Data must be in dataframe or matrix format...")
+  #validate inputs
+  if(!is.matrix(data) && !is.data.frame(data)){
+    stop("Data must be a matrix or data.frame")
   }
   
-  #check the predictor class
-  if(class(grade_predictor)[1] != "rule_based_RandomForest"){
-    stop("Classifier must be a multiclassPairs::rule_based_RandomForest object...")
+  if(!all(c("TSPs", "score") %in% names(classifier))){
+    stop("Classifier must have $TSPs and $score components")
   }
   
-  #update gene names in incoming data from hgnc_symbols to ensembl_gene_id, which is required by the rpedictor.
-  if(gene_id == "hgnc_symbol"){
-    
-    #convert the rownames to first column
-    mutated_data = dplyr::as_tibble(this_data, 
-                                    rownames = "hgnc_symbol")
-    
-    #left join with gene list to get ensembl IDs
-    mutated_data = dplyr::left_join(gene_list, 
-                                    mutated_data, 
-                                    by = "hgnc_symbol")
-    
-    #remove duplicated rows
-    mutated_data = dplyr::filter(mutated_data, 
-                                 duplicated(ensembl_gene_id) == FALSE)
-    
-    #convert the first column back to rownames
-    row.names(mutated_data) = unique(mutated_data$ensembl_gene_id)
-    mutated_data[1:2] <- NULL
-    
-    #convert back to expected name
-    this_data = mutated_data
+  if(is.null(grade_labels) || length(grade_labels) != 2){
+    stop("grade_labels must be a character vector of length 2: c('low_label', 'high_label')")
   }
   
-  #run predict_RF from multiclassPairs
-  grade_results = multiclassPairs::predict_RF(classifier = grade_predictor, 
-                                              Data = this_data, 
-                                              impute = impute, 
-                                              impute_reject = impute_reject, 
-                                              impute_kNN = impute_kNN, 
-                                              verbose = verbose)
+  #extract gene pairs from classifier
+  gene1_ids <- classifier$TSPs[, "gene1"]
+  gene2_ids <- classifier$TSPs[, "gene2"]
   
-  #return results
-  return(grade_results)
+  #find which rules have both genes present in data
+  gene1_present <- gene1_ids %in% rownames(data)
+  gene2_present <- gene2_ids %in% rownames(data)
+  both_present <- gene1_present & gene2_present
+  
+  #filter to valid rules only
+  valid_gene1 <- gene1_ids[both_present]
+  valid_gene2 <- gene2_ids[both_present]
+  valid_scores <- classifier$score[both_present]
+  
+  #print diagnostic info
+  if(verbose){
+    cat("\n", rep("=", 60), sep = "")
+    cat("\n  SwitchBox Classifier:", classifier$name)
+    cat("\n", rep("=", 60), sep = "")
+    cat("\n  Total rules in classifier:", length(gene1_ids))
+    cat("\n  Rules with both genes present:", sum(both_present))
+    cat("\n  Rules removed:", sum(!both_present))
+    cat("\n  Samples to score:", ncol(data))
+    cat("\n  Grade threshold:", grade_threshold)
+    cat("\n  Grade labels:", paste(grade_labels, collapse = " / "))
+    cat("\n", rep("=", 60), sep = "", "\n\n")
+  }
+  
+  #check if we have enough rules
+  if(sum(both_present) == 0){
+    stop("No valid rules found! Check that gene IDs match between data and classifier.")
+  }
+  
+  if(sum(both_present) < 10){
+    warning("Very few rules remaining (", sum(both_present), "). Results may be unreliable.")
+  }
+  
+  #extract expression values for valid gene pairs
+  gene1_expr <- data[valid_gene1, , drop = FALSE]
+  gene2_expr <- data[valid_gene2, , drop = FALSE]
+  
+  #check which rules are satisfied (gene1 > gene2)
+  rules_satisfied <- gene1_expr > gene2_expr
+  
+  #calculate weighted score for each sample
+  #score = (sum of weights for satisfied rules) / (total weight)
+  weighted_rules <- (rules_satisfied * 1) * valid_scores
+  scores <- colSums(weighted_rules) / sum(valid_scores)
+  
+  #assign class based on threshold
+  predicted_class <- ifelse(scores >= grade_threshold, 
+                            grade_labels[2], 
+                            grade_labels[1])
+  
+  #create result data frame
+  result <- data.frame(
+    prediction_score = scores,
+    predicted_class = predicted_class,
+    row.names = names(scores)
+  )
+  
+  return(result)
 }

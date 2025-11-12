@@ -7,51 +7,82 @@
 #' Uro are subclassified into UroA, UroB or UroC by a second predictor
 "_PACKAGE"
 
-#' Classifier Grade 3.
+#' SwitchBox Classifier for WHO 1999 Tumor Grading
 #'
-#' Classifier generated with [multiclassPairs::predict_RF()], this dataset is needed for predicting 
-#' the grade (1, 2, or 3) and calculating scores for incoming data.
+#' A pre-trained SwitchBox classifier using Top Scoring Pairs (TSPs) methodology
+#' to predict bladder tumor grades according to the WHO 1999 classification system.
+#' The classifier distinguishes between low-grade (G1/G2) and high-grade (G3) tumors
+#' based on gene expression patterns.
 #'
-#' A Large rule_based_RandomForest object. A list of 6.
-#'
-#' \itemize{
-#'  \item genes. Genes in ensembl format.
-#'  \item rules. A set of rules for the classifier in ensembl format.
-#'  \item TrainingMatrix. Binary matrix for the rules in the training data.
-#'  \item boruta. Boruta results for the classifier.
-#'  \item RF_classifier. Random forest classifier details.
-#'  \item calls. Information on how the model was generated.
+#' @format A list with 5 components:
+#' \describe{
+#'   \item{name}{Character string; classifier identifier (e.g., "283TSPs")}
+#'   \item{TSPs}{Character matrix with 2 columns ("gene1", "gene2") containing
+#'     gene pair identifiers for each comparison rule. Gene identifiers are symbols
+#'     (e.g., "TP53", "BRCA1")}
+#'   \item{score}{Named numeric vector of rule weights/importance scores, one per
+#'     gene pair. Higher values indicate more discriminative rules}
+#'   \item{tieVote}{Factor indicating voting behavior for tied comparisons}
+#'   \item{labels}{Character vector of length 2: class labels c("G1G2", "G3")}
 #' }
 #'
-#' @docType data
-#' @keywords datasets
-#' @name classifier_grade3
-#' @usage data(classifier_grade3)
-#' @format A list of 6.
-NULL
+#' @details
+#' This classifier was trained on bladder cancer gene expression data to predict
+#' WHO 1999 histological grades. It uses rank-based gene pair comparisons that
+#' are robust to technical batch effects and normalization differences.
+#' 
+#' **Usage:**
+#' - Scores < 0.5 indicate low-grade tumors (G1/G2)
+#' - Scores ≥ 0.5 indicate high-grade tumors (G3)
+#' 
+#' **Gene identifiers:** Gene symbols (HUGO nomenclature)
+#' 
+#' **Number of rules:** Varies (check \code{nrow(classifier_grade_who_1999$TSPs)})
+#'
+#' @seealso
+#' \code{\link{classifier_grade_who_2022}} for WHO 2022 grading,
+#' \code{\link{int_predict_grade}} to apply the classifier
+#'
+"classifier_grade_who_1999"
 
-#' Classifier High Grade.
+#' SwitchBox Classifier for WHO 2022 Tumor Grading
 #'
-#' Classifier generated with [multiclassPairs::predict_RF()], this dataset is needed for predicting 
-#' the grade (high grade/lowgrade) and calculating scores for incoming data.
+#' A pre-trained SwitchBox classifier using Top Scoring Pairs (TSPs) methodology
+#' to predict bladder tumor grades according to the WHO 2022 classification system.
+#' The classifier distinguishes between low-grade (LG) and high-grade (HG) tumors
+#' incorporating molecular and morphological features.
 #'
-#' A Large rule_based_RandomForest object. A list of 6.
-#'
-#' \itemize{
-#'  \item genes. Genes in ensembl format.
-#'  \item rules. A set of rules for the classifier in ensembl format.
-#'  \item TrainingMatrix. Binary matrix for the rules in the training data.
-#'  \item boruta. Boruta results for the classifier.
-#'  \item RF_classifier. Random forest classifier details.
-#'  \item calls. Information on how the model was generated.
+#' @format A list with 5 components:
+#' \describe{
+#'   \item{name}{Character string; classifier identifier (e.g., "140TSPs")}
+#'   \item{TSPs}{Character matrix with 2 columns ("gene1", "gene2") containing
+#'     gene pair identifiers for each comparison rule. Gene identifiers are symbols
+#'     (e.g., "TP53", "BRCA1")}
+#'   \item{score}{Named numeric vector of rule weights/importance scores, one per
+#'     gene pair. Higher values indicate more discriminative rules}
+#'   \item{tieVote}{Factor indicating voting behavior for tied comparisons}
+#'   \item{labels}{Character vector of length 2: class labels c("LG", "HG")}
 #' }
 #'
-#' @docType data
-#' @keywords datasets
-#' @name classifier_hg
-#' @usage data(classifier_hg)
-#' @format A list of 6.
-NULL
+#' @details
+#' This classifier was trained on bladder cancer gene expression data to predict
+#' WHO 2022 molecular grades, which integrate both molecular alterations and
+#' morphological features. The rank-based approach is robust to technical
+#' variation between datasets.
+#' 
+#' **Usage:**
+#' - Scores < 0.5 indicate low-grade tumors (LG)
+#' - Scores ≥ 0.5 indicate high-grade tumors (HG)
+#' 
+#' **Gene identifiers:** Gene symbols (HUGO nomenclature)
+#' 
+#' **Number of rules:** Varies (check \code{nrow(classifier_grade_who_2022$TSPs)})
+#'
+#' @seealso
+#' \code{\link{classifier_grade_who_1999}} for WHO 1999 grading,
+#' \code{\link{int_predict_grade}} to apply the classifier
+#'
+"classifier_grade_who_2022"
 
 #' Classifier LundTax 5c.
 #'

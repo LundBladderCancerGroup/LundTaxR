@@ -5,54 +5,41 @@
 \title{Predict Tumor Grade}
 \usage{
 int_predict_grade(
-  this_data = NULL,
-  grade_predictor = NULL,
-  gene_id = "hgnc_symbol",
-  impute = FALSE,
-  impute_reject = 0.67,
-  impute_kNN = 5,
+  data,
+  classifier,
+  grade_threshold = 0.5,
+  grade_labels = NULL,
   verbose = TRUE
 )
 }
 \arguments{
-\item{this_data}{Required parameter. Data frame or matrix with expression values.}
+\item{data}{Gene expression matrix (genes × samples). Row names must be gene identifiers.}
 
-\item{grade_predictor}{Required parameter, the predictor needed for grading. Should be one of the
-following bundled classifiers (classifier_GRADE3 or classifier_HG).}
+\item{classifier}{SwitchBox classifier object with $TSPs, $score components}
 
-\item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
-hgnc_symbol (default) or ensembl_gene_id.}
+\item{grade_threshold}{Numeric cutoff for binary classification (default 0.5)}
 
-\item{impute}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Boolean. To determine if missed genes and NA
-values should be imputed or not. The non missed rules will be used to detemine the closest
-samples in the training binary matrix (i.e. which is stored in the classifier object). For each
-sample, the mode value for nearest samples in the training data will be assigned to the missed
-rules. Default is FALSE.}
+\item{grade_labels}{Character vector of length 2: c("low_label", "high_label")}
 
-\item{impute_reject}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. A number between 0 and 1 indicating
-the threshold of the missed rules in the sample. Based on this threshold the sample will be
-rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not
-be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results
-for this sample.}
-
-\item{impute_kNN}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Integer determines the number of the
-nearest samples in the training data to be used in the imputation. Default is 5. It is not
-recommended to use large number (i.e. >10).}
-
-\item{verbose}{A logical value indicating whether processing messages will be printed or not.
-Default is TRUE.}
+\item{verbose}{Print diagnostic information}
 }
 \value{
-A data frame with grade results.
+Data frame with sample IDs as row names and two columns:
+\describe{
+\item{prediction_score}{Numeric scores (0-1 scale)}
+\item{predicted_class}{Character classification based on threshold}
+}
 }
 \description{
-Function for predicting grade using random forest and the bundled classifiers.
+Apply SwitchBox Classifier to Gene Expression Data
 }
 \details{
 Internal function called by \code{\link[=int_calc_signatures]{int_calc_signatures()}}.
-Not meant for out of package use. This function is internally calling
-\code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}} to run a random forest prediction using one of the two bundled
-classifiers for grade prediction.
+Not meant for out of package use. This function applies a pre-trained SwitchBox classifier to
+gene expression data to predict molecular tumor grades. The classifier uses Top Scoring Pairs
+(TSPs) methodology, comparing expression levels between gene pairs to generate predictions.
+Each rule evaluates whether gene1 > gene2, and satisfied rules contribute their
+weights to the final score.
 }
 \examples{
 \dontrun{
