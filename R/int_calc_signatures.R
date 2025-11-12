@@ -73,7 +73,7 @@ int_calc_signatures = function(this_data = NULL,
   results_g3 = int_predict_grade(data = this_data,
                                  classifier = classifier_grade_who_1999,
                                  grade_threshold = 0.5, 
-                                 grade_labels = c("G1_G2", "G3"), 
+                                 grade_labels = c("G1_2", "G3"), 
                                  verbose = verbose)
 
   #WHO 2004/2016 (HG vs LG)
