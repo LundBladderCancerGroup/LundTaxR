@@ -88,8 +88,8 @@ reference:
     contents:
     - classifier_lundtax_5c
     - classifier_lundtax_7c
-    - classifier_grade3
-    - classifier_hg
+    - classifier_grade_who_1999
+    - classifier_grade_who_2022
     - sjodahl_2017
     - sjodahl_2017_meta
     - gene_list
