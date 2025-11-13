@@ -8,6 +8,7 @@ classify_samples(
   this_data = NULL,
   gene_id = "hgnc_symbol",
   threshold_progression = 0.58,
+  threshold_grade = 0.5,
   log_transform = FALSE,
   adjust = TRUE,
   adj_factor = 5.1431,
@@ -28,6 +29,8 @@ hgnc_symbol (default) or ensembl_gene_id.}
 
 \item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is
 0.58.}
+
+\item{threshold_grade}{Threshold to flag a sample as high grade, default is 0.5.}
 
 \item{log_transform}{Boolean parameter. If TRUE, the function log transforms the incoming
 expression values. Default is FALSE.}
@@ -89,14 +92,14 @@ the second classifier. This function internally calls
 data("sjodahl_2017")
 
 #classify samples
-sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
-                                   log_transform = FALSE, 
-                                   adjust = TRUE, 
-                                   impute = TRUE, 
-                                   include_data = TRUE, 
+sjodahl_classes = classify_samples(this_data = sjodahl_2017,
+                                   log_transform = FALSE,
+                                   adjust = TRUE,
+                                   impute = TRUE,
+                                   include_data = TRUE,
                                    verbose = FALSE)
-                                   
+
 #view data
-summary(sjodahl_classes)                                    
+summary(sjodahl_classes)
 
 }

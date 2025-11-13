@@ -16,8 +16,7 @@ int_calc_score(
 \arguments{
 \item{this_data}{Required parameter. Data frame or matrix with expression values.}
 
-\item{variable}{Required parameter. Input should be one of the following; immune,
-score141up, proliferation, or progression.}
+\item{variable}{Required parameter. Input should be one of the following; immune or score141up.}
 
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}.
 Accepted values are; hgnc_symbol (default) or ensembl_gene_id.}

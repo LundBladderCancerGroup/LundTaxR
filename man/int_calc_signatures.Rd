@@ -8,11 +8,9 @@ int_calc_signatures(
   this_data = NULL,
   gene_id = "hgnc_symbol",
   threshold_progression = 0.58,
+  threshold_grade = 0.5,
   adjust = FALSE,
   adj_factor = 5.1431,
-  impute = FALSE,
-  impute_reject = 0.67,
-  impute_kNN = 5,
   verbose = TRUE
 )
 }
@@ -22,7 +20,7 @@ int_calc_signatures(
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
 hgnc_symbol (default) or ensembl_gene_id.}
 
-\item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is 0.58.}
+\item{threshold_progression}{Threshold to flag a sample as high/low grade, default is 0.5.}
 
 \item{adjust}{Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
 on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained.}
@@ -30,20 +28,6 @@ on stable genes. If FALSE (default), no adjustment will be made and the original
 \item{adj_factor}{Only applicable if adjust is set to TRUE. Allows users to apply a proportional
 adjustment to the normalized scores, enabling finer control over the final output values.
 After dividing each score by the mean expression of stable genes, the result is multiplied by this factor.}
-
-\item{impute}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Boolean. To determine if missed genes and NA
-values should be imputed or not. The non missed rules will be used to determine the closest samples
-in the training binary matrix (i.e. which is stored in the classifier object). For each sample,
-the mode value for nearest samples in the training data will be assigned to the missed rules. Default is FALSE.}
-
-\item{impute_reject}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. A number between 0 and 1 indicating the
-threshold of the missed rules in the sample. Based on this threshold the sample will be rejected
-(i.e. skipped if higher than the impute_reject threshold) and the missed rules will not be imputed
-in this sample. Default is 0.67. NOTE, The results object will not have any results for this sample.}
-
-\item{impute_kNN}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Integer determines the number of the nearest
-samples in the training data to be used in the imputation. Default is 5. It is not recommended to
-use large number (i.e. >10).}
 
 \item{verbose}{A logical value indicating whether processing messages will be
 printed or not. Default is TRUE.}
@@ -64,7 +48,7 @@ int_ prefix. See individual function documentation for more information on the i
 library(dplyr, multiclassPairs)
 
 #get scores for bundled data
-my_scores = int_calc_signatures(this_data = sjodahl_2017, 
+my_scores = int_calc_signatures(this_data = sjodahl_2017,
                                   impute = TRUE)
-                            
+
 }
