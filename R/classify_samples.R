@@ -134,7 +134,7 @@ classify_samples = function(this_data = NULL,
 
   #stop if ensembl_gene_id is selected
   if(gene_id == "ensembl_gene_id"){
-    if(verbose) cat("  Converting: Ensembl IDs → HGNC symbols\n")
+    if(verbose) cat("  Converting: Ensembl IDs to HGNC symbols\n")
 
     if(!exists("tx2gene")) {
       stop("Mapping table 'tx2gene' not found. Please provide a data.frame with columns 'gene_id' and 'gene_name'.")
