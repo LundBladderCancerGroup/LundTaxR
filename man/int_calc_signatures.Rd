@@ -20,7 +20,9 @@ int_calc_signatures(
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
 hgnc_symbol (default) or ensembl_gene_id.}
 
-\item{threshold_progression}{Threshold to flag a sample as high/low grade, default is 0.5.}
+\item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is 0.58.}
+
+\item{threshold_grade}{Threshold to flag a sample as high/low grade, default is 0.5.}
 
 \item{adjust}{Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
 on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained.}
@@ -48,7 +50,6 @@ int_ prefix. See individual function documentation for more information on the i
 library(dplyr, multiclassPairs)
 
 #get scores for bundled data
-my_scores = int_calc_signatures(this_data = sjodahl_2017,
-                                  impute = TRUE)
+my_scores = int_calc_signatures(this_data = sjodahl_2017)
 
 }

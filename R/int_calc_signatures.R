@@ -9,7 +9,7 @@
 #' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are;
 #' hgnc_symbol (default) or ensembl_gene_id.
 #' @param threshold_progression Threshold to flag a sample as high risk of progression, default is 0.58.
-#' @param threshold_progression Threshold to flag a sample as high/low grade, default is 0.5.
+#' @param threshold_grade Threshold to flag a sample as high/low grade, default is 0.5.
 #' @param adjust Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
 #' on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained.
 #' @param adj_factor Only applicable if adjust is set to TRUE. Allows users to apply a proportional
@@ -31,8 +31,7 @@
 #' library(dplyr, multiclassPairs)
 #'
 #' #get scores for bundled data
-#' my_scores = int_calc_signatures(this_data = sjodahl_2017,
-#'                                   impute = TRUE)
+#' my_scores = int_calc_signatures(this_data = sjodahl_2017)
 #'
 int_calc_signatures = function(this_data = NULL,
                                gene_id = "hgnc_symbol",
