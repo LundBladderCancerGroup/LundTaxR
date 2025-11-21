@@ -51,16 +51,16 @@ int_check_log2_transformation = function(expression_df,
   #perform checks to determine if the data is log2-transformed
   if (results$max_value > 20) {
     results$log2_transformed <- FALSE
-    results$message <- "The data is NOT log2-transformed. The maximum value is too large."
+    results$message <- "The data is NOT log2-transformed.\n  The maximum value is too large."
   } else if (results$min_value < -5) {
     results$log2_transformed <- FALSE
-    results$message <- "The data is NOT log2-transformed. The minimum value is too small (likely not log2-transformed)."
+    results$message <- "The data is NOT log2-transformed.\n  The minimum value is too small (likely not log2-transformed)."
   } else if (results$contains_zeros) {
     results$log2_transformed <- TRUE
-    results$message <- "The data is likely log2-transformed but contains zeros (check if pseudocounts were added)."
+    results$message <- "The data is likely log2-transformed\n  but contains zeros (check if pseudocounts were added)."
   } else {
     results$log2_transformed <- TRUE
-    results$message <- "The data is likely log2-transformed. The range and distribution are consistent with log2-transformed data."
+    results$message <- "The data is likely log2-transformed. The range \n  and distribution are consistent with log2-transformed data."
   }
   
   #return the results
