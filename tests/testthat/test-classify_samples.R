@@ -1,6 +1,4 @@
 library(testthat)
-library(tibble)
-library(dplyr)
 
 ####################################################################################################
 #classifier overview
