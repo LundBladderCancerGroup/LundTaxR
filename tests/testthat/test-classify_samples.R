@@ -1,13 +1,15 @@
 library(testthat)
 library(LundTaxR)
+library(tibble)
+library(dplyr)
 
 ####################################################################################################
 #classifier overview
 test_that("classify_samples returns a list with expected components", {
-  
+
   #load test data
   data("sjodahl_2017")
-  
+
   #run the classifier
   result <- classify_samples(this_data = sjodahl_2017, log_transform = FALSE)
   expect_type(result, "list")
@@ -18,10 +20,10 @@ test_that("classify_samples returns a list with expected components", {
 ####################################################################################################
 #scores object
 test_that("classify_samples returns correct scores for first row", {
-  
+
   #load test data
   data("sjodahl_2017")
-  
+
   #run the classifier
   result <- classify_samples(
     this_data = sjodahl_2017,
@@ -31,9 +33,9 @@ test_that("classify_samples returns correct scores for first row", {
     include_data = TRUE,
     verbose = FALSE
   )
-  
+
   #subset the scores to the first sample and add sample ID as first column
-  scores_results <- as.data.frame(result$scores[1,]) %>% 
+  scores_results <- as.data.frame(result$scores[1,]) %>%
     rownames_to_column("sample_id")
 
   #get the expected scores for the first sample
@@ -74,15 +76,15 @@ test_that("classify_samples returns correct scores for first row", {
     smooth_muscle = 6.360039,
     smooth_muscle_proportion = 0.1225026
   )
-  
+
   #make expected columns factors with the same levels as scores_results
   expected$progression_risk <- factor(expected$progression_risk, levels = levels(scores_results$progression_risk))
   expected$molecular_grade_who_2022 <- factor(expected$molecular_grade_who_2022, levels = levels(scores_results$molecular_grade_who_2022))
   expected$molecular_grade_who_1999 <- factor(expected$molecular_grade_who_1999, levels = levels(scores_results$molecular_grade_who_1999))
-  
+
   #do we get back the exact same values for the first sample
   expect_equal(expected, scores_results, tolerance = 1e-6, check.attributes = FALSE)
-  
+
   #check if column names are the expected
   expect_equal(colnames(expected), colnames(scores_results))
 
@@ -152,12 +154,12 @@ test_that("classify_samples returns correct 5-class subtypes", {
     ),
     stringsAsFactors = FALSE
   )
-  
+
   #actual subtypes
-  actual_subtypes <- as.data.frame(result$predictions_5classes) %>% 
-    tibble::rownames_to_column("sample_id") %>% 
+  actual_subtypes <- as.data.frame(result$predictions_5classes) %>%
+    tibble::rownames_to_column("sample_id") %>%
     dplyr::rename(subtype = `result$predictions_5classes`)
-  
+
   #check that names and values match
   expected_subtypes$subtype <- as.character(expected_subtypes$subtype)
   actual_subtypes$subtype <- as.character(actual_subtypes$subtype)
@@ -169,10 +171,10 @@ test_that("classify_samples returns correct 5-class subtypes", {
 ####################################################################################################
 #7class subtypes
 test_that("classify_samples returns correct 7-class subtypes", {
-  
+
   #load test data
   data("sjodahl_2017")
-  
+
   #run the classifier
   result <- classify_samples(
     this_data = sjodahl_2017,
@@ -182,7 +184,7 @@ test_that("classify_samples returns correct 7-class subtypes", {
     include_data = TRUE,
     verbose = FALSE
   )
-  
+
   #expected subtypes
   expected_subtypes <- data.frame(
     sample_id = c(
@@ -233,12 +235,12 @@ test_that("classify_samples returns correct 7-class subtypes", {
     ),
     stringsAsFactors = FALSE
   )
-  
+
   #actual subtypes
-  actual_subtypes <- as.data.frame(result$predictions_7classes) %>% 
-    tibble::rownames_to_column("sample_id") %>% 
+  actual_subtypes <- as.data.frame(result$predictions_7classes) %>%
+    tibble::rownames_to_column("sample_id") %>%
     dplyr::rename(subtype = `result$predictions_7classes`)
-  
+
   #check that names and values match
   expected_subtypes$subtype <- as.character(expected_subtypes$subtype)
   actual_subtypes$subtype <- as.character(actual_subtypes$subtype)
