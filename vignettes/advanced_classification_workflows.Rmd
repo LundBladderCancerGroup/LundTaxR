@@ -94,7 +94,7 @@ confidence_summary <- data.frame(
   sample = names(basic_results$predictions_7classes),
   subtype_7c = basic_results$predictions_7classes,
   subtype_5c = basic_results$predictions_5classes,
-  confidence = basic_results$subtype_scores[, "prediction_delta"]
+  confidence = basic_results$subtype_scores[, "prediction_delta_5_class"]
 )
 
 # Identify low-confidence predictions
