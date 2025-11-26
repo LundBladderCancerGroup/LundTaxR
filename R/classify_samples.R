@@ -254,8 +254,8 @@ classify_samples = function(this_data = NULL,
   results_suburo$scores = all_scores$merged_scores
   results_suburo$na_genes = all_scores$na_genes
 
-  #calculate prediction_delta
-  prediction_delta = apply(score_matrix, 1, function(row) {
+  #calculate 5-class prediction delta (Uro, GU, BaSq, Mes, ScNE)
+  prediction_delta_5_class = apply(score_matrix[, c("Uro", "GU", "BaSq", "Mes", "ScNE")], 1, function(row) {
     valid_scores = sort(row[!is.na(row)], decreasing = TRUE)
     if(length(valid_scores) >= 2){
       return(valid_scores[1] - valid_scores[2])
@@ -265,8 +265,40 @@ classify_samples = function(this_data = NULL,
       return(NA)
     }
   })
-
-  score_matrix = cbind(score_matrix, prediction_delta = prediction_delta)
+  
+  #calculate 7-class prediction delta (UroA, UroB, UroC) only for Uro samples
+  prediction_delta_7_class = sapply(1:nrow(score_matrix), function(i) {
+    subtype = prediction$predictions_classes[i]
+    if(subtype == "Uro") {
+      uro_scores = score_matrix[i, c("UroA", "UroB", "UroC")]
+      valid_scores = sort(uro_scores[!is.na(uro_scores)], decreasing = TRUE)
+      if(length(valid_scores) >= 2){
+        return(valid_scores[1] - valid_scores[2])
+      } else if(length(valid_scores) == 1){
+        return(valid_scores[1])
+      } else {
+        return(NA)
+      }
+    } else {
+      return(NA)
+    }
+  })
+  
+  #collapsed delta: use 7-class delta for Uro, 5-class delta otherwise
+  prediction_delta_collapsed = ifelse(
+    prediction$predictions_classes == "Uro",
+    prediction_delta_7_class,
+    prediction_delta_5_class
+  )
+  
+  #add to score matrix
+  score_matrix = cbind(
+    score_matrix,
+    prediction_delta_5_class = prediction_delta_5_class,
+    prediction_delta_7_class = prediction_delta_7_class,
+    prediction_delta_collapsed = prediction_delta_collapsed
+  )
+  
   results_suburo$subtype_scores = score_matrix
 
   score_matrix_suburo = score_matrix[,2:4, drop = FALSE]
