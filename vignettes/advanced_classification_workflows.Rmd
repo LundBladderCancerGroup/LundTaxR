@@ -328,8 +328,8 @@ if(nrow(missing_info) > 0) {
 # Identify samples with potential quality issues
 quality_flags <- data.frame(
   sample = names(basic_results$predictions_7classes),
-  confidence = basic_results$subtype_scores[, "prediction_delta"],
-  quality_flag = basic_results$subtype_scores[, "prediction_delta"] < 0.05
+  confidence = basic_results$subtype_scores[, "prediction_delta_5_class"],
+  quality_flag = basic_results$subtype_scores[, "prediction_delta_5_class"] < 0.05
 )
 
 flagged_samples <- quality_flags[quality_flags$quality_flag, ]
