@@ -35,16 +35,17 @@ library(dplyr)
 
 # Introduction
 
-The Lund Taxonomy is a single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. LundTaxR automates this classification process through:
+The Lund Taxonomy is an RNA-based single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. This classification can be applied to both non–muscle-invasive and muscle-invasive disease and provides consistent and biologically meaningful groups. LundTaxR automates this classification process through:
 
 - **Two-stage classification**: First classifies samples into 5 main subtypes (Uro, GU, BaSq, Mes, ScNE), then sub-classifies Uro samples into UroA, UroB, or UroC
 - **Signature score estimation**: Calculates additional signature scores for immune infiltration, stromal content, cell proliferation, and progression risk
 - **Advanced visualizations**: Generates publication-ready heatmaps and plots
 - **Robust data handling**: Supports multiple gene ID formats and includes missing data imputation
+  %%% with respect to data handling you could mention that it works with both RNA-seq and microarray data and that it is stable across different preprocessing pipelines
 
 # Input Data Requirements
 
-LundTaxR expects **gene expression data** in matrix or data frame format where:
+LundTaxR expects **gene expression data** in matrix or data frame format where: %% fix paragraphs below
 - **Rows** = genes (HGNC symbols or Ensembl IDs)
 - **Columns** = samples  
 - **Values** = expression counts (RNA-seq) or intensities (microarray)
@@ -55,7 +56,7 @@ The classifier works with both bulk RNA-seq and microarray platforms, requiring 
 
 ## Bundled Test Data
 
-LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 307 bladder cancer samples with known Lund Taxonomy classifications. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
+LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 307 bladder cancer samples. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
 
 # Quick Start
 ## Run The Classifier
@@ -78,7 +79,7 @@ sjodahl_classes <- classify_samples(
 ## Exploring Classification Results
 
 The `classify_samples()` function returns a comprehensive list object containing multiple components. Let's explore the different types of results and understand what information is available:
-
+%% seems like you get info for 267 samples out of 307 in the dataset - maybe mention that?
 ```{r classification_results}
 # Examine the classification results
 summary(sjodahl_classes)
@@ -127,6 +128,9 @@ plot_classification_heatmap(
 # )
 ```
 
+%% is it poossible to customize which signatures to show in the heatmap? if so maybe mention that here
+%% same for the signature heatmaps
+%% if the user wants to just get the data used for plotting without plotting, is that possible?
 The resulting heatmap provides a comprehensive overview of your classification results, with samples grouped by predicted subtype and colored according to their molecular characteristics. This visualization is essential for:
 
 - **Quality assessment**: Verify that samples cluster appropriately within subtypes

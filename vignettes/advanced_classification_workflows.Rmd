@@ -36,7 +36,7 @@ library(ComplexHeatmap)
 
 # Introduction
 
-This vignette demonstrates advanced usage patterns for the main classifier in LundTaxR, building upon the concepts introduced in the "Getting Started" guide. If you're new to LundTaxR, we recommend starting with the basic tutorial first:
+This vignette demonstrates advanced functions/parameters? for the main classifier(The only one?) in LundTaxR, building upon the concepts introduced in the "Getting Started" guide. If you're new to LundTaxR, we recommend starting with the basic tutorial first:
 
 ```r
 vignette("getting_started_with_LundTaxR", package = "LundTaxR")
@@ -71,7 +71,9 @@ The `classify_samples()` function offers numerous parameters that allow you to f
 ## 1.1 Classification Thresholds and Confidence Scoring
 
 The LundTaxR classifier uses a two-stage approach: first classifying samples into 5 main classes (Uro, GU, BaSq, Mes, ScNE), then further subdividing Uro samples into UroA, UroB, and UroC subtypes.
-
+%% we often call the UroA/B/C classes or groups isntead of subtypes. check with Mattias.
+%% again no explanaition about sample number lower than total number of samples in dataset?
+%% should we mention that the prediction scores are probabilities summing to 1? This is importante to understand the delta score and confidence_summary.
 ```{r basic-classification}
 # Load example data
 data("sjodahl_2017")
@@ -165,7 +167,7 @@ cat("Mean immune score - Double-logged:", round(mean(double_logged_results$score
 ### Score Adjustment and Normalization
 
 The adjustment parameters are crucial for **signature score calculations** but do not affect the classifier subtype predictions. These parameters control how signature scores are normalized based on stable reference genes:
-
+%% I would need more detal such as range and how this score affects resulst to be able to use this properly. how reasonable results look like?
 ```{r adjustment-examples}
 # Classification without score adjustment
 no_adjustment <- classify_samples(
@@ -271,7 +273,7 @@ system.time({
 ## 1.5 Custom Progression Risk Thresholds
 
 The classifier includes a progression risk score that can be customized based on your clinical context:
-
+%% what is the range of the progression risk score? is it 0-1? what is a resonable intrepretation of the score?
 ```{r advanced_classification_workflow_progression_threshold}
 # Conservative progression threshold
 conservative_prog <- classify_samples(
