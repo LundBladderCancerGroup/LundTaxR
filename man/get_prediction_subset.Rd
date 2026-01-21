@@ -12,7 +12,7 @@ get_prediction_subset(
 )
 }
 \arguments{
-\item{these_predictions}{A list containing data frames and named vectors to be subset.}
+\item{these_predictions}{Output from \code{classify_samples} function run with \code{include_data = TRUE}.}
 
 \item{these_sample_ids}{A vector of sample IDs to subset the data. If NULL, sample IDs will be
 extracted from \code{these_samples_metadata}.}
@@ -36,7 +36,8 @@ This function is designed to subset various components of a predictions list bas
 set of sample IDs. If \code{these_sample_ids} is not provided, the function will attempt to extract
 sample IDs from \code{these_samples_metadata}. The function handles different structures within the
 list, including data frames and named vectors, ensuring that only the specified samples are
-retained.
+retained. Note, this function expects that \code{classify_samples} has been run with \code{include_data = TRUE},
+if not the \code{data} component will be missing.
 }
 \examples{
 sjodahl_classes = classify_samples(this_data = sjodahl_2017, 
