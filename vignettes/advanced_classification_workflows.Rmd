@@ -36,7 +36,7 @@ library(ComplexHeatmap)
 
 # Introduction
 
-This vignette demonstrates advanced usage patterns for the main classifier in LundTaxR, building upon the concepts introduced in the "Getting Started" guide. If you're new to LundTaxR, we recommend starting with the basic tutorial first:
+This vignette demonstrates advanced parameter usage for the LundTax classifier, building upon the concepts introduced in the "Getting Started" guide. If you're new to LundTaxR, we recommend starting with the basic tutorial first:
 
 ```r
 vignette("getting_started_with_LundTaxR", package = "LundTaxR")
@@ -70,7 +70,8 @@ The `classify_samples()` function offers numerous parameters that allow you to f
 
 ## 1.1 Classification Thresholds and Confidence Scoring
 
-The LundTaxR classifier uses a two-stage approach: first classifying samples into 5 main classes (Uro, GU, BaSq, Mes, ScNE), then further subdividing Uro samples into UroA, UroB, and UroC subtypes.
+The LundTaxR classifier uses a two-stage approach: first classifying samples into 5 main classes (Uro, GU, BaSq, Mes, ScNE), then further classifying Uro samples into the following subgroups: UroA, UroB, and UroC.
+For each sample, the output shows the normalized subtype scores for each subtype, that sums to 1 for the main subtypes and within the Uro classes.
 
 ```{r basic-classification}
 # Load example data

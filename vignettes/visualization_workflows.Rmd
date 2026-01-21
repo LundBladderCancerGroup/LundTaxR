@@ -33,7 +33,7 @@ library(dplyr)
 
 # Introduction
 
-This vignette provides a comprehensive guide to LundTaxR's visualization functions (excluding the main heatmaps). Each section describes the function's purpose, required and optional parameters, expected inputs, and output behavior, followed by practical examples with different parameter combinations. These tools help you interpret, present, and explore your classification results in a publication-ready format.
+This vignette provides a comprehensive guide to LundTaxR's visualization functions (excluding the main heatmaps, covered in the Getting started with LundTaxR). Each section describes the function's purpose, required and optional parameters, expected inputs, and output behavior, followed by practical examples with different parameter combinations. These tools help you interpret, present, and explore your classification results in a publication-ready format.
 
 # Forest Plots
 

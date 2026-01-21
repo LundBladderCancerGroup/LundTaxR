@@ -53,7 +53,7 @@ Each section includes practical code examples that you can adapt to your own dat
 
 After classifying your samples, you may want to focus your analysis on a specific subset of samples—such as those belonging to a particular group or cohort. The `get_prediction_subset` function is designed to help you do just that: it extracts only the relevant samples from all components of your prediction results, whether those components are data frames or named vectors.
 
-You can specify the samples to keep either by providing a vector of sample IDs, or by passing a metadata data frame that contains the desired samples. The function will return a new predictions list, but restricted to just the samples you specified.
+You can specify the samples to keep either by providing a vector of sample IDs, or by passing a metadata data frame that contains the desired samples (the metadata must contain a column with valid sample Ids, typically named "sample_id"). The function will return a new predictions list for the subset of samples specified.
 
 ### Example: Subsetting by Sample IDs
 

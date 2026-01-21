@@ -35,7 +35,7 @@ library(dplyr)
 
 # Introduction
 
-The Lund Taxonomy is a single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. LundTaxR automates this classification process through:
+The Lund Taxonomy is an RNA-based single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. This classification can be applied to both non–muscle-invasive and muscle-invasive disease and provides consistent and biologically meaningful groups. LundTaxR automates this classification process through:
 
 - **Two-stage classification**: First classifies samples into 5 main subtypes (Uro, GU, BaSq, Mes, ScNE), then sub-classifies Uro samples into UroA, UroB, or UroC
 - **Signature score estimation**: Calculates additional signature scores for molecular grade, cell proliferation, progression risk, immune infiltration, and stromal content
@@ -79,6 +79,9 @@ sjodahl_classes <- classify_samples(
 ## Exploring Classification Results
 
 The `classify_samples()` function returns a comprehensive list object containing multiple components. Let's explore the different types of results and understand what information is available:
+The classifier examines multiple gene ratios to calculate the probability of each sample belonging to each subtype, with the highest score determining the predicted subtype. For each sample, the output shows the normalized subtype scores for each subtype, that sums to 1 for the main subtypes and within the Uro classes. The prediction delta score indicates the difference between the top two subtype scores, providing a measure of classification confidence. A higher delta score suggests a more confident classification, while a lower score may indicate ambiguity between subtypes.
+In addition to prediction confidence, the scores are particularly useful to understand tumor biology aspects such as heterogeneity.
+For example, a sample with a high GU score and low scores for other subtypes is confidently classified as GU, while a sample with more balanced scores may indicate mixed features. Similarly, infiltrated samples will show a relative increase in the Mes score compared to non-infiltrated samples, but are distinct from true MES subtype samples.
 
 ```{r classification_results}
 # Examine the classification results

@@ -23,7 +23,7 @@
 
 > **Robust molecular subtyping of bladder cancer using the Lund Taxonomy classification system**
 
-LundTaxR implements a Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy, enabling precise molecular characterization.
+LundTaxR implements a Random Forest-based classifier for molecular subtyping of bladder cancer samples using gene expression data. The package provides a two-stage classification system based on the established Lund Taxonomy. This classification can be applied to both non–muscle-invasive and muscle-invasive disease and provides consistent and biologically meaningful groups.
 
 ## LundTax Subtypes
 
