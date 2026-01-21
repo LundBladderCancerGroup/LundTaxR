@@ -112,7 +112,7 @@ plot_ratio_forest(
   plot_title = "Hazard Ratio for Overall Survival",
   surv_time = "surv_os_time",
   surv_event = "surv_os_event",
-  n_bins = 10
+  n_bins = 10)
 
 # Example 2: Using precomputed data
 # First we need to run `get_survival` to get the data needed for plotting
@@ -129,7 +129,6 @@ plot_ratio_forest(
   this_data = surv_data,
   stat_plot = "hazard_ratio",
   plot_title = "Hazard Ratio for Overall Survival" 
-)
 )
 ```
 
