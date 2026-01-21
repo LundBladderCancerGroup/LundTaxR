@@ -117,7 +117,9 @@ int_calc_signatures = function(this_data = NULL,
                                verbose = verbose)
 
   #merge scores
-  cat("\n  7. Merging Scores\n")
+  if(verbose){
+    cat("\n  7. Merging Scores\n")
+  }
 
   merge_scores = cbind(proliferation_score = results_proliferation$sig_score$Score,
                        molecular_grade_who_1999 = results_g3$predicted_class,

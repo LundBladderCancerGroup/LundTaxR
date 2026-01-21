@@ -38,14 +38,14 @@ library(dplyr)
 The Lund Taxonomy is an RNA-based single-sample molecular classification system that divides bladder cancer into distinct subtypes with different clinical behaviors and treatment responses. This classification can be applied to both non–muscle-invasive and muscle-invasive disease and provides consistent and biologically meaningful groups. LundTaxR automates this classification process through:
 
 - **Two-stage classification**: First classifies samples into 5 main subtypes (Uro, GU, BaSq, Mes, ScNE), then sub-classifies Uro samples into UroA, UroB, or UroC
-- **Signature score estimation**: Calculates additional signature scores for immune infiltration, stromal content, cell proliferation, and progression risk
+- **Signature score estimation**: Calculates additional signature scores for molecular grade, cell proliferation, progression risk, immune infiltration, and stromal content
 - **Advanced visualizations**: Generates publication-ready heatmaps and plots
-- **Robust data handling**: Supports multiple gene ID formats and includes missing data imputation
-- **Stable across platforms and data processing pipelines**: Works with both RNA-seq and microarray data
+- **Robust data handling**: Independent of pre-processing, supports multiple gene ID formats, and includes missing data imputation
 
 # Input Data Requirements
 
 LundTaxR expects **gene expression data** in matrix or data frame format where:
+
 - **Rows** = genes (HGNC symbols or Ensembl IDs)
 - **Columns** = samples  
 - **Values** = expression counts (RNA-seq) or intensities (microarray)
@@ -56,7 +56,7 @@ The classifier works with both bulk RNA-seq and microarray platforms, requiring 
 
 ## Bundled Test Data
 
-LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 307 bladder cancer samples. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
+LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 267 bladder cancer samples with known Lund Taxonomy classifications. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
 
 # Quick Start
 ## Run The Classifier
@@ -98,12 +98,12 @@ head(sjodahl_classes$subtype_scores)
 
 ## Creating Publication-Ready Classification Heatmaps
 
-LundTaxR allows the user to generate sophisticated heatmaps that visualize both the classification results and the underlying molecular signatures. The `plot_classification_heatmap()` function creates a multi-layered visualization showing:
+LundTaxR allows the user to generate sophisticated heatmaps that visualize both the classification results and 17 subtype defining molecular signatures. The `plot_classification_heatmap()` function creates a multi-layered visualization showing:
 
 - **Sample classifications** with color-coded subtype annotations
-- **Molecular signatures** including immune infiltration, stromal content, and pathway activity scores  
-- **Gene expression patterns** for key classifier genes across samples
-- **Prediction confidence** through organized sample ordering and score visualization
+- **Molecular signatures** subtype defining signatures, pathway activity scores and overall immune and stromal infiltration  
+- **Gene expression patterns** for highlighting subtype-specific expression profiles
+- **Prediction confidence** reported subtype-specific scores for each sample
 
 The heatmap automatically orders samples by subtype and within each subtype by prolfieration score, making it easy to identify patterns and validate classifications. You can choose between 5-class (Uro, GU, BaSq, Mes, ScNE) or 7-class (UroA, UroB, UroC, GU, BaSq, Mes, ScNE) annotation systems.
 
@@ -131,22 +131,20 @@ plot_classification_heatmap(
 # )
 ```
 
-
-The resulting heatmap provides a comprehensive overview of your classification results, with samples grouped by predicted subtype and colored according to their molecular characteristics. This visualization is essential for:
+The resulting heatmap provides a comprehensive overview of your classification results, with samples grouped by predicted subtype and colored according to the LundTax system. This visualization is essential for:
 
 - **Quality assessment**: Verify that samples cluster appropriately within subtypes
 - **Pattern recognition**: Identify molecular signatures that distinguish subtypes  
-- **Publication figures**: Generate high-quality plots ready for manuscripts
+- **Publication figures**: Generate high-quality plots ready for publication
 - **Result interpretation**: Understand the biological basis of classifications
 
 ## Visualizing Molecular Signatures with Signature Heatmaps
 
 In addition to classification results, LundTaxR provides additional molecular profiling through signature scores that capture key biological processes. The `plot_signatures_heatmap()` function creates specialized visualizations focused on these molecular signatures, including:
 
+- **Prognostic Signatures** (molecular grading, proliferation, progression)
 - **Immune infiltration scores** (B cells, T cells, NK cells, dendritic cells, etc.)
 - **Stromal content markers** (CAFs, endothelial cells, smooth muscle)
-- **Cellular processes** (proliferation, progression risk, molecular grading)
-- **Pathway activities** and other biological signatures
 
 This visualization is particularly valuable for assessing tumor microenvironment signals that vary independently of the bladder cancer subtypes. The heatmap organizes samples by predicted subtype and displays signature scores as color-coded intensities, making it easy to identify variability within and across subtypes.
 
@@ -186,9 +184,9 @@ plot_signatures_heatmap(
 The signature heatmap reveals several key biological insights:
 
 - **Subtype-specific patterns**: Each molecular subtype shows distinct signature score profiles
+- **Proliferation patterns**: ScNE samples often display high proliferation scores
 - **Immune microenvironment**: Immune infiltration may vary dramatically between subtypes (e.g., high in Mes, low in UroA)
 - **Stromal content**: Mesenchymal subtypes typically show elevated stromal signatures
-- **Proliferation patterns**: ScNE samples often display high proliferation scores
 - **Clinical relevance**: In NMIBC, progression risk scores help identify aggressive tumors within subtypes
 
-This visualization complements the classification heatmap by visualizing additional key features of tumor biology, providing insights into bladder cancer heterogeneity beyond the molecular subtype itself.
+This visualization complements the classification heatmap by visualizing additional key features of tumor biology, providing insights into bladder cancer heterogeneity beyond the cancer cell phenotype itself.

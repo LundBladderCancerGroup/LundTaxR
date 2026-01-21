@@ -43,6 +43,7 @@ This vignette provides a comprehensive guide to LundTaxR's visualization functio
 Visualizes odds ratios (from GLM) or hazard ratios (from Cox models) for a set of signature scores or predictors, using a forest plot. This function can call `get_glm` or `get_survival` internally, or accept precomputed data.
 
 **Key Parameters:**
+
 - `these_predictions`, `these_samples_metadata`: Output from `classify_samples` and associated metadata (required unless `this_data` is provided)
 - `stat_plot`: Set to `"odds_ratio"` (GLM) or `"hazard_ratio"` (Cox)
 - `categorical_factor`: Categorical variable to test (for odds ratio)
@@ -54,9 +55,11 @@ Visualizes odds ratios (from GLM) or hazard ratios (from Cox models) for a set o
 - `return_data`: Set to TRUE to return the data used for plotting
 
 **Expected Inputs:**
+
 - Output from `classify_samples` and matching metadata, or a data frame from `get_glm`/`get_survival`
 
 **Output:**
+
 - A forest plot (ggplot object) visualizing odds or hazard ratios, optionally with significance annotation
 
 **Example: Odds Ratio for Gender**
@@ -101,7 +104,8 @@ plot_ratio_forest(
 **Purpose:**
 Creates a forest plot for multiple subtypes based on Cox proportional hazards models, including a table of sample and event counts per subtype.
 
-**Key Parameters:** 
+**Key Parameters:**
+
 - `these_predictions`, `these_samples_metadata`: Output from `classify_samples` and metadata
 - `this_subtype`: Vector of subtypes to include (e.g., c("Uro", "GU"))
 - `subtype_class`: "5_class" or "7_class"
@@ -112,9 +116,11 @@ Creates a forest plot for multiple subtypes based on Cox proportional hazards mo
 - `return_data`: Set to TRUE to return the plot data
 
 **Expected Inputs:**
+
 - Output from `classify_samples` and matching metadata
 
 **Output:**
+
 - A combined forest plot and summary table (ggplot/patchwork object)
 
 **Example: All 5-class Subtypes, CSS Endpoint**
@@ -150,7 +156,8 @@ plot_subtype_forest(
 **Purpose:**
 Creates a point or segment plot of ranked signature scores for a selected variable, colored by subtype. Useful for visualizing score distributions and subtype separation.
 
-**Key Parameters:** 
+**Key Parameters:**
+
 - `these_predictions`: Output from `classify_samples`
 - `this_score`: Numeric column to plot (e.g., "proliferation_score")
 - `this_subtype`, `subtype_class`: Focus on specific subtype(s) and class
@@ -160,9 +167,11 @@ Creates a point or segment plot of ranked signature scores for a selected variab
 - `return_data`: Set to TRUE to return the formatted data
 
 **Expected Inputs:**
+
 - Output from `classify_samples`
 
 **Output:**
+
 - A ggplot object (point or segment plot), or a data frame if `return_data = TRUE`
 
 **Example: Ranked Proliferation Scores, All 5-class Subtypes**
@@ -206,7 +215,8 @@ head(ranked_data)
 **Purpose:**
 Visualizes the distribution of subtype prediction scores for a selected subtype using violin plots. Useful for comparing score distributions across subtypes.
 
-**Key Parameters:** 
+**Key Parameters:**
+
 - `these_predictions`: Output from `classify_samples`
 - `this_subtype`: Subtype to plot (e.g., "GU", "UroA")
 - `plot_adjust`: Bandwidth adjustment for violin smoothing
@@ -216,9 +226,11 @@ Visualizes the distribution of subtype prediction scores for a selected subtype 
 - `return_data`: Set to TRUE to return tidy data
 
 **Expected Inputs:**
+
 - Output from `classify_samples`
 
 **Output:**
+
 - A ggplot violin plot, or a tidy data frame if `return_data = TRUE`
 
 **Example: GU Subtype, Adjust Bandwidth, No Trim**
@@ -259,15 +271,18 @@ head(violin_data)
 Creates a stacked barplot of subtype prediction scores for a selected subtype, showing the distribution and ranking of scores.
 
 **Key Parameters:**
+
 - `these_predictions`: Output from `classify_samples`
 - `this_subtype`: Subtype to plot (e.g., "Uro", "UroA")
 - `out_path`, `out_format`, `plot_width`, `plot_height`: Output controls
 - `return_data`: Set to TRUE to return tidy data
 
 **Expected Inputs:**
+
 - Output from `classify_samples`
 
 **Output:**
+
 - A ggplot stacked barplot, or a tidy data frame if `return_data = TRUE`
 
 **Example: Uro Scores**

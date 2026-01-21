@@ -271,7 +271,7 @@ system.time({
 
 ## 1.5 Custom Progression Risk Thresholds
 
-The classifier includes a progression risk score that can be customized based on your clinical context:
+The classifier includes a progression risk score, a continious score ranging from 0-1, that can be customized based on your clinical context. The default cutoff 0.56 classifies samples above the set threshold into High Risk (HR) and below the threshold to Low Risk (LR). You can adjust this threshold to be more conservative or sensitive:
 
 ```{r advanced_classification_workflow_progression_threshold}
 # Conservative progression threshold
