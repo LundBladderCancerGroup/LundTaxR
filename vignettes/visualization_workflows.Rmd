@@ -72,7 +72,7 @@ results <- classify_samples(
   verbose = FALSE
 )
 
-# Plot
+# Example 1: Plot using direct inputs (let the funciton internally run `get_glm`)
 plot_ratio_forest(
   these_predictions = results,
   these_samples_metadata = sjodahl_2017_meta,
@@ -83,11 +83,28 @@ plot_ratio_forest(
   col_bon = TRUE,
   scale = 100
 )
+
+# Example 2: Using precomputed data
+# First we need to run `get_glm` to get the data needed for plotting
+glm_data = get_glm(
+  these_predictions = results, 
+  these_samples_metadata = sjodahl_2017_meta, 
+  predictor_columns =  c("b_cells", "proliferation_score"), 
+  categorical_factor = "gender"
+  )
+
+# Visualize using the precomputed data
+plot_ratio_forest(
+  this_data = glm_data,
+  stat_plot = "odds_ratio",
+  plot_title = "Example using precomputed data"
+  )
 ```
 
 **Example: Hazard Ratio for Overall Survival**
 
 ```{r plot-ratio-forest-hazard}
+# Example 1: Plot using direct inputs (let the function internally run `get_survival`)
 plot_ratio_forest(
   these_predictions = results,
   these_samples_metadata = sjodahl_2017_meta,
@@ -96,6 +113,23 @@ plot_ratio_forest(
   surv_time = "surv_os_time",
   surv_event = "surv_os_event",
   n_bins = 10
+
+# Example 2: Using precomputed data
+# First we need to run `get_survival` to get the data needed for plotting
+  surv_data = get_survival(
+  these_predictions = results, 
+  these_samples_metadata = sjodahl_2017_meta,
+  surv_time = "surv_os_time",
+  this_subtype = "Uro",
+  surv_event = "surv_os_event"
+  )
+
+# Visualize using the precomputed data
+plot_ratio_forest(
+  this_data = surv_data,
+  stat_plot = "hazard_ratio",
+  plot_title = "Hazard Ratio for Overall Survival" 
+)
 )
 ```
 
