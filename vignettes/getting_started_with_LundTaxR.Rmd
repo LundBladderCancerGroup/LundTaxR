@@ -41,11 +41,11 @@ The Lund Taxonomy is an RNA-based single-sample molecular classification system 
 - **Signature score estimation**: Calculates additional signature scores for immune infiltration, stromal content, cell proliferation, and progression risk
 - **Advanced visualizations**: Generates publication-ready heatmaps and plots
 - **Robust data handling**: Supports multiple gene ID formats and includes missing data imputation
-  %%% with respect to data handling you could mention that it works with both RNA-seq and microarray data and that it is stable across different preprocessing pipelines
+- **Stable across platforms and data processing pipelines**: Works with both RNA-seq and microarray data
 
 # Input Data Requirements
 
-LundTaxR expects **gene expression data** in matrix or data frame format where: %% fix paragraphs below
+LundTaxR expects **gene expression data** in matrix or data frame format where:
 - **Rows** = genes (HGNC symbols or Ensembl IDs)
 - **Columns** = samples  
 - **Values** = expression counts (RNA-seq) or intensities (microarray)
@@ -79,7 +79,10 @@ sjodahl_classes <- classify_samples(
 ## Exploring Classification Results
 
 The `classify_samples()` function returns a comprehensive list object containing multiple components. Let's explore the different types of results and understand what information is available:
-%% seems like you get info for 267 samples out of 307 in the dataset - maybe mention that?
+The classifier examines multiple gene ratios to calculate the probability of each sample belonging to each subtype, with the highest score determining the predicted subtype. For each sample, the output shows the normalized subtype scores for each subtype, that sums to 1 for the main subtypes and within the Uro classes. The prediction delta score indicates the difference between the top two subtype scores, providing a measure of classification confidence. A higher delta score suggests a more confident classification, while a lower score may indicate ambiguity between subtypes.
+In addition to prediction confidence, the scores are particularly useful to understand tumor biology aspects such as heterogeneity.
+For example, a sample with a high GU score and low scores for other subtypes is confidently classified as GU, while a sample with more balanced scores may indicate mixed features. Similarly, infiltrated samples will show a relative increase in the Mes score compared to non-infiltrated samples, but are distinct from true MES subtype samples.
+
 ```{r classification_results}
 # Examine the classification results
 summary(sjodahl_classes)
@@ -128,9 +131,7 @@ plot_classification_heatmap(
 # )
 ```
 
-%% is it poossible to customize which signatures to show in the heatmap? if so maybe mention that here
-%% same for the signature heatmaps
-%% if the user wants to just get the data used for plotting without plotting, is that possible?
+
 The resulting heatmap provides a comprehensive overview of your classification results, with samples grouped by predicted subtype and colored according to their molecular characteristics. This visualization is essential for:
 
 - **Quality assessment**: Verify that samples cluster appropriately within subtypes

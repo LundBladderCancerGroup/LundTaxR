@@ -53,7 +53,7 @@ Each section includes practical code examples that you can adapt to your own dat
 
 After classifying your samples, you may want to focus your analysis on a specific subset of samples—such as those belonging to a particular group or cohort. The `get_prediction_subset` function is designed to help you do just that: it extracts only the relevant samples from all components of your prediction results, whether those components are data frames or named vectors.
 
-You can specify the samples to keep either by providing a vector of sample IDs, or by passing a metadata data frame that contains the desired samples(%% this is also based on a var "sample_ID"? maybe simplify this part). The function will return a new predictions list for the subset of samples specified.
+You can specify the samples to keep either by providing a vector of sample IDs, or by passing a metadata data frame that contains the desired samples (the metadata must contain a column with valid sample Ids, typically named "sample_id"). The function will return a new predictions list for the subset of samples specified.
 
 ### Example: Subsetting by Sample IDs
 
@@ -87,7 +87,7 @@ head(subset_results$predictions_5classes)
 ### Example: Subsetting by Metadata
 
 Alternatively, you can subset your results using a metadata data frame. This is useful if you have filtered your metadata for a specific group (e.g., only tumor samples, or only a certain clinical stage):
-%% this is ambiguous - maybe mention the structure of the metadata or refer to where you can see that and the variables available for filtering?
+
 ```{r subset-by-metadata}
 # Take a subset of the metadata
 meta_subset <- head(sjodahl_2017_meta)
@@ -131,7 +131,7 @@ This ordering can be used directly in plotting functions or to structure your da
 Understanding how clinical or experimental variables are distributed across molecular subtypes is a key part of downstream analysis. The `get_subtype_metrics` function makes it easy to tabulate and summarize metadata variables (such as sex, stage, survival events, or other annotations) by subtype classification.
 
 This function works by matching sample IDs between your metadata and prediction results, then counting the number of samples for each subtype and each level of your chosen metadata variable. You can focus on a specific value (e.g., only males, or only events) or get a full breakdown for all levels.
-%% why not show how to sort the returned data using the ratio or sample order function?
+
 ### Example: Counting Events by Subtype
 
 Suppose you want to see how many overall survival events occurred in each subtype:
@@ -167,5 +167,5 @@ metrics_gender <- get_subtype_metrics(
 )
 knitr::kable(metrics_gender)
 ```
-%% I was wondering if you can do continuous variables too, like average age? also could you get something like table(df$subtype, df$gender)?
+
 This approach helps you quickly assess the distribution of key variables across subtypes, supporting both quality control and hypothesis generation in your analyses.

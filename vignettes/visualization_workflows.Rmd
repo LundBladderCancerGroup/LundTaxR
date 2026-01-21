@@ -33,17 +33,16 @@ library(dplyr)
 
 # Introduction
 
-This vignette provides a comprehensive guide to LundTaxR's visualization functions (excluding the main heatmaps, which are covered in the getting_started_with_LundTaxR). Each section describes the function's purpose, required and optional parameters, expected inputs, and output behavior, followed by practical examples with different parameter combinations. These tools help you interpret, present, and explore your classification results in a publication-ready format.
-%% to be able to adjust function parameters I would need more info about the functions behind it and the parameteres them selves. maybe refer to to original packages behind it?
-%% refer to ?xx() for more details about parameters? or link to function documentations online?
+This vignette provides a comprehensive guide to LundTaxR's visualization functions (excluding the main heatmaps, covered in the Getting started with LundTaxR). Each section describes the function's purpose, required and optional parameters, expected inputs, and output behavior, followed by practical examples with different parameter combinations. These tools help you interpret, present, and explore your classification results in a publication-ready format.
+
 # Forest Plots
 
 ## `plot_ratio_forest`
 
 **Purpose:**
 Visualizes odds ratios (from GLM) or hazard ratios (from Cox models) for a set of signature scores or predictors, using a forest plot. This function can call `get_glm` or `get_survival` internally, or accept precomputed data.
-%% since you can start with precomputed data it would be good to show an example of that too? or how thte data should look like if you want to prepare it yourself.
-**Key Parameters:** %% fix paragraphs
+
+**Key Parameters:**
 - `these_predictions`, `these_samples_metadata`: Output from `classify_samples` and associated metadata (required unless `this_data` is provided)
 - `stat_plot`: Set to `"odds_ratio"` (GLM) or `"hazard_ratio"` (Cox)
 - `categorical_factor`: Categorical variable to test (for odds ratio)
@@ -102,7 +101,7 @@ plot_ratio_forest(
 **Purpose:**
 Creates a forest plot for multiple subtypes based on Cox proportional hazards models, including a table of sample and event counts per subtype.
 
-**Key Parameters:** %% fix paragraphs
+**Key Parameters:** 
 - `these_predictions`, `these_samples_metadata`: Output from `classify_samples` and metadata
 - `this_subtype`: Vector of subtypes to include (e.g., c("Uro", "GU"))
 - `subtype_class`: "5_class" or "7_class"
@@ -151,7 +150,7 @@ plot_subtype_forest(
 **Purpose:**
 Creates a point or segment plot of ranked signature scores for a selected variable, colored by subtype. Useful for visualizing score distributions and subtype separation.
 
-**Key Parameters:** %% fix paragraphs
+**Key Parameters:** 
 - `these_predictions`: Output from `classify_samples`
 - `this_score`: Numeric column to plot (e.g., "proliferation_score")
 - `this_subtype`, `subtype_class`: Focus on specific subtype(s) and class
@@ -207,7 +206,7 @@ head(ranked_data)
 **Purpose:**
 Visualizes the distribution of subtype prediction scores for a selected subtype using violin plots. Useful for comparing score distributions across subtypes.
 
-**Key Parameters:** %% fix paragraphs
+**Key Parameters:** 
 - `these_predictions`: Output from `classify_samples`
 - `this_subtype`: Subtype to plot (e.g., "GU", "UroA")
 - `plot_adjust`: Bandwidth adjustment for violin smoothing
