@@ -7,9 +7,10 @@
 #' set of sample IDs. If `these_sample_ids` is not provided, the function will attempt to extract 
 #' sample IDs from `these_samples_metadata`. The function handles different structures within the 
 #' list, including data frames and named vectors, ensuring that only the specified samples are 
-#' retained.
+#' retained. Note, this function expects that `classify_samples` has been run with `include_data = TRUE`, 
+#' if not the `data` component will be missing.
 #'
-#' @param these_predictions A list containing data frames and named vectors to be subset.
+#' @param these_predictions Output from `classify_samples` function run with `include_data = TRUE`.
 #' @param these_sample_ids A vector of sample IDs to subset the data. If NULL, sample IDs will be 
 #' extracted from `these_samples_metadata`.
 #' @param these_samples_metadata A data frame containing sample metadata. If provided and 
@@ -57,6 +58,11 @@ get_prediction_subset = function(these_predictions = NULL,
                                  these_sample_ids = NULL,
                                  these_samples_metadata = NULL,
                                  samples_rownames = FALSE){
+
+  #check if data is inlcuded in the prediction object
+  if(is.null(these_predictions$data)){
+    stop("The 'these_predictions' object does not contain a 'data' component. \n  Please ensure that the 'classify_samples' function was run with 'include_data = TRUE'.")
+  }
 
   if(!is.null(these_samples_metadata) && is.null(these_sample_ids)){
     message("Metadata provided, the function will subset to the sample IDs in this object...")
