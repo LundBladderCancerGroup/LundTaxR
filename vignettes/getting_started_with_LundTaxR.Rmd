@@ -56,7 +56,7 @@ The classifier works with both bulk RNA-seq and microarray platforms, requiring 
 
 ## Bundled Test Data
 
-LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 307 bladder cancer samples with known Lund Taxonomy classifications. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
+LundTaxR includes the `sjodahl_2017` dataset - a curated expression matrix from Sjödahl et al. (2017) containing 267 bladder cancer samples with known Lund Taxonomy classifications. This microarray dataset serves as reference data for testing the classifier and is used in the examples below to demonstrate package functionality.
 
 # Quick Start
 ## Run The Classifier

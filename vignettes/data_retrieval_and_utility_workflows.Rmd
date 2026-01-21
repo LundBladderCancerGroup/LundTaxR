@@ -69,7 +69,7 @@ results <- classify_samples(
   verbose = FALSE
 )
 
-# Select a few sample IDs
+# Example 1: Select a few sample IDs
 selected_samples <- head(sjodahl_2017_meta$sample_id)
 
 # Subset the results to just these samples
@@ -82,6 +82,18 @@ subset_results <- get_prediction_subset(
 head(subset_results$data)
 head(subset_results$subtype_scores)
 head(subset_results$predictions_5classes)
+
+# Example 2: Using a metadata subset to the sample IDs of interest
+metadata_sub = sjodahl_2017_meta %>% filter(turb_cis == 1)
+
+# Subset the results to the samples in the filtered metadata
+subset_results_meta <- get_prediction_subset(
+  these_predictions = results,
+  these_samples_metadata = metadata_sub
+)
+
+# View the subset prediction results
+head(subset_results_meta$subtype_scores)
 ```
 
 ### Example: Subsetting by Metadata
