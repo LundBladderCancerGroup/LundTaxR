@@ -255,13 +255,13 @@ plot_ranked_score = function(these_predictions = NULL,
     if(subtype_class == "5_class"){
       subtype_labels <- data.frame(
         subtype = c("Uro", "GU", "BaSq", "Mes", "ScNE"),
-        y_pos = c(1.5, 2.5, 3.5, 4.5, 5.5),
+        y_pos = c(5.5, 4.5, 3.5, 2.5, 1.5),
         x_pos = rep(-30, 5)
       ) 
     }else if(subtype_class == "7_class"){
       subtype_labels <- data.frame(
         subtype = c("UroA", "UroB", "UroC", "GU", "BaSq", "Mes", "ScNE"),
-        y_pos = c(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5),
+        y_pos = c(7.5, 6.5, 5.5, 4.5, 3.5, 2.5, 1.5),
         x_pos = rep(-30, 7)
       ) 
     }
@@ -275,19 +275,20 @@ plot_ranked_score = function(these_predictions = NULL,
     
     
     #segment plot
+    #segment plot
     my_plot = ggplot() +
-      {if(subtype_class == "5_class") geom_segment(data = uro_lines, aes(x = x_start, xend = x_end, y = 1, yend = 1.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "5_class") geom_segment(data = gu_lines, aes(x = x_start, xend = x_end, y = 2, yend = 2.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "5_class") geom_segment(data = uro_lines, aes(x = x_start, xend = x_end, y = 5, yend = 5.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "5_class") geom_segment(data = gu_lines, aes(x = x_start, xend = x_end, y = 4, yend = 4.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
       {if(subtype_class == "5_class") geom_segment(data = basq_lines, aes(x = x_start, xend = x_end, y = 3, yend = 3.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "5_class") geom_segment(data = mes_lines, aes(x = x_start, xend = x_end, y = 4, yend = 4.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "5_class") geom_segment(data = scne_lines, aes(x = x_start, xend = x_end, y = 5, yend = 5.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = uroa_lines, aes(x = x_start, xend = x_end, y = 1, yend = 1.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = urob_lines, aes(x = x_start, xend = x_end, y = 2., yend = 2.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = uroc_lines, aes(x = x_start, xend = x_end, y = 3, yend = 3.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "5_class") geom_segment(data = mes_lines, aes(x = x_start, xend = x_end, y = 2, yend = 2.98, color = subtype), linewidth = seg_width, lineend = "butt")} + 
+      {if(subtype_class == "5_class") geom_segment(data = scne_lines, aes(x = x_start, xend = x_end, y = 1, yend = 1.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = uroa_lines, aes(x = x_start, xend = x_end, y = 7, yend = 7.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = urob_lines, aes(x = x_start, xend = x_end, y = 6, yend = 6.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = uroc_lines, aes(x = x_start, xend = x_end, y = 5, yend = 5.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
       {if(subtype_class == "7_class") geom_segment(data = gu_lines, aes(x = x_start, xend = x_end, y = 4, yend = 4.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = basq_lines, aes(x = x_start, xend = x_end, y = 5, yend = 5.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = mes_lines, aes(x = x_start, xend = x_end, y = 6, yend = 6.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
-      {if(subtype_class == "7_class") geom_segment(data = scne_lines, aes(x = x_start, xend = x_end, y = 7, yend = 7.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = basq_lines, aes(x = x_start, xend = x_end, y = 3, yend = 3.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = mes_lines, aes(x = x_start, xend = x_end, y = 2, yend = 2.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
+      {if(subtype_class == "7_class") geom_segment(data = scne_lines, aes(x = x_start, xend = x_end, y = 1, yend = 1.98, color = subtype), linewidth = seg_width, lineend = "butt")} +
       scale_color_manual(values = lund_colors$lund_colors) + 
       xlab("Index") + 
       geom_text(data = subtype_labels, 
