@@ -271,7 +271,7 @@ system.time({
 
 ## 1.5 Custom Progression Risk Thresholds
 
-The classifier includes a progression risk score, a continious score ranging from 0-1, that can be customized based on your clinical context. The default cutoff 0.56 classifies samples above the set threshold into High Risk (HR) and below the threshold to Low Risk (LR). You can adjust this threshold to be more conservative or sensitive:
+The classifier includes a progression risk score, a continuous score ranging from 0-1, that can be customized based on your clinical context. The default cutoff 0.56 classifies samples above the set threshold into High Risk (HR) and below the threshold to Low Risk (LR). You can adjust this threshold to be more conservative or sensitive. **Note:** The example dataset primarily consists of muscle-invasive bladder cancer (MIBC) cases, which represent tumors that have already progressed beyond the muscle layer. The progression risk score displayed here was originally developed and validated for non-muscle-invasive bladder cancer (NMIBC) patients to predict their probability of future progression to muscle-invasive disease. 
 
 ```{r advanced_classification_workflow_progression_threshold}
 # Conservative progression threshold
@@ -301,16 +301,17 @@ prog_mat <- as.matrix(prog_comparison[, c("default_prog", "conservative_prog", "
 rownames(prog_mat) <- prog_comparison$sample
 
 # Map HR/LR to colors
-prog_colors <- c("HR" = "#D7263D", "LR" = "#1B998B")
+prog_colors <- c("HR" = "black", "LR" = "grey")
 Heatmap(
-  prog_mat,
+  t(prog_mat),
   name = "Progression",
   col = prog_colors,
   cluster_rows = FALSE,
   cluster_columns = FALSE,
-  show_row_names = FALSE,
-  column_title = "Progression Risk Calls (Threshold Comparison)",
-  row_title = "Samples"
+  show_row_names = TRUE,
+  show_column_names = FALSE,
+  height = unit(2, "cm"),
+  column_title = "Progression Risk Calls (Threshold Comparison)"
 )
 ```
 
