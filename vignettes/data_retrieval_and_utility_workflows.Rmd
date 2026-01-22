@@ -163,7 +163,15 @@ metrics_events <- get_subtype_metrics(
   this_metadata_variable = "surv_os_event",
   factor_level = 1
 )
-knitr::kable(metrics_events)
+
+#set subtype order for table output
+desired_order <- c("Uro", "GU", "BaSq", "Mes", "ScNE")
+
+#print table
+metrics_events %>%
+  mutate(prediction = factor(prediction, levels = desired_order)) %>%
+  arrange(prediction) %>%
+  knitr::kable()
 ```
 
 ### Example: Summarizing Sex Distribution
@@ -177,7 +185,14 @@ metrics_gender <- get_subtype_metrics(
   this_metadata_variable = "gender",
   factor_level = "Male"
 )
-knitr::kable(metrics_gender)
+
+
+desired_order <- c("Uro", "GU", "BaSq", "Mes", "ScNE")
+
+metrics_gender %>%
+  mutate(prediction = factor(prediction, levels = desired_order)) %>%
+  arrange(prediction) %>%
+  knitr::kable()
 ```
 
 This approach helps you quickly assess the distribution of key variables across subtypes, supporting both quality control and hypothesis generation in your analyses.
