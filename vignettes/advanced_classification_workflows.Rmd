@@ -302,6 +302,7 @@ rownames(prog_mat) <- prog_comparison$sample
 
 # Map HR/LR to colors
 prog_colors <- c("HR" = "black", "LR" = "grey")
+
 Heatmap(
   t(prog_mat),
   name = "Progression",
@@ -311,7 +312,9 @@ Heatmap(
   show_row_names = TRUE,
   show_column_names = FALSE,
   height = unit(2, "cm"),
-  column_title = "Progression Risk Calls (Threshold Comparison)"
+  column_title = "Progression Risk Calls - Threshold Comparison\n(Black = High Risk, Grey = Low Risk)",
+  show_heatmap_legend = FALSE,
+  row_names_side = "left"
 )
 ```
 
