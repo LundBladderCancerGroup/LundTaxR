@@ -28,7 +28,7 @@
 #' @export
 #'
 #' @examples
-#' custom_annot <- create_custom_annotations(
+#' custom_annot <- get_custom_annotations(
 #'   metadata = sjodahl_2017_meta,
 #'   annotation_vars = c("gender", "turb_stage"),
 #'   show_legends = TRUE)
