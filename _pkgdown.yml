@@ -82,6 +82,7 @@ reference:
     - plot_ranked_score
     - plot_subscore_box
     - plot_subscore_violin
+    - get_custom_annotations
     
   - title: "Data and Classifiers"
     desc: "Built-in datasets and classifier objects"

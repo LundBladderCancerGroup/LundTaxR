@@ -11,10 +11,15 @@ plot_classification_heatmap(
   subtype_annotation = "5_class",
   this_sample_order = NULL,
   norm = TRUE,
-  plot_scores = TRUE,
+  plot_scores = FALSE,
+  plot_signature_scores = FALSE,
+  custom_annotation = NULL,
+  include_sections = list(early_late_cc = TRUE, luminal_tfs = TRUE, luminal_genes = TRUE,
+    fgfr3 = TRUE, circuit = TRUE, tp63 = TRUE, basq = TRUE, keratinization = TRUE, erbb =
+    TRUE, adhesion = TRUE, myc = TRUE, neuronal = TRUE),
   show_ann_legend = FALSE,
   show_hm_legend = FALSE,
-  ann_height = 8,
+  ann_height = 0.5,
   plot_title = "My Plot",
   plot_width = 14,
   plot_height = 11,
@@ -35,7 +40,7 @@ include_data = FALSE (default).}
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
 hgnc_symbol (default) or ensembl_gene_id.}
 
-\item{subtype_annotation}{Can be one of the following; "5 _class" (default) or "7_class"
+\item{subtype_annotation}{Can be one of the following; "5_class" (default) or "7_class"
 annotation.}
 
 \item{this_sample_order}{Optional, set sample order. Default, samples are split by subtype, and
@@ -44,8 +49,19 @@ high).}
 
 \item{norm}{Boolean parameter. Set to TRUE (default) to normalize the data into Z-scaled values.}
 
-\item{plot_scores}{Boolean parameter. Set to TRUE (default) to plot prediction scores for each
-class.}
+\item{plot_scores}{Boolean parameter. Set to TRUE to plot prediction scores for each class.
+Default is FALSE.}
+
+\item{plot_signature_scores}{Boolean parameter. Set to TRUE to add signature scores heatmap
+after the classification heatmap. Default is FALSE.}
+
+\item{custom_annotation}{Optional HeatmapAnnotation object to add below the existing
+subtype prediction annotations and score bars. Should be created with \code{get_custom_annotations()}.
+Default is NULL.}
+
+\item{include_sections}{Named list specifying which heatmap sections to include. Available sections:
+early_late_cc, luminal_tfs, luminal_genes, fgfr3, circuit, tp63, basq, keratinization, erbb,
+adhesion, myc, neuronal. Each should be TRUE/FALSE. Default includes all sections (TRUE).}
 
 \item{show_ann_legend}{Boolean parameter, set to TRUE to show annotation legend (Lund classes).
 Default is FALSE.}
@@ -54,7 +70,7 @@ Default is FALSE.}
 
 \item{ann_height}{Plotting parameter, optional. Annotation height in cm. Default = 8.}
 
-\item{plot_title}{Plotting parameter. The title for the generated heatmap. Deafult is "My Plot".}
+\item{plot_title}{Plotting parameter. The title for the generated heatmap. Default is "My Plot".}
 
 \item{plot_width}{This parameter controls the width in inches. Default is 14 (4200 pixels at 300
 PPI).}
@@ -83,7 +99,7 @@ Plot heatmap with classification results.
 }
 \details{
 This function plots a heatmap including genes and signatures of interest, with
-prediction results and scores on top.
+prediction results and scores on top. Optionally includes signature scores heatmap.
 }
 \examples{
 #run classifier
