@@ -46,11 +46,33 @@ The Lund Taxonomy is an RNA-based single-sample molecular classification system 
 
 LundTaxR expects **gene expression data** in matrix or data frame format where:
 
-- **Rows** = genes (HGNC symbols or Ensembl IDs)
+- **Rows** = genes with identifiers as **rownames** (HGNC symbols or Ensembl IDs)
 - **Columns** = samples  
 - **Values** = expression counts (RNA-seq) or intensities (microarray)
 - **Format** = Raw counts, TPM, FPKM, or normalized data
 - **Missing data** = Automatically handled through imputation
+
+## Gene Identifier Requirements
+
+**Critical**: Gene identifiers must be stored as **rownames**, not in a separate column.
+
+### Ensembl Gene IDs
+If using Ensembl IDs, they must be **non-versioned** (without `.XX` suffix) for successful conversion to HGNC symbols:
+
+```{r eval=FALSE}
+# Correct format - non-versioned Ensembl IDs
+head(rownames(your_data))
+# [1] "ENSG00000141510" "ENSG00000012048" "ENSG00000146648"
+
+# INCORRECT - versioned IDs will fail mapping
+# [1] "ENSG00000141510.17" "ENSG00000012048.23"
+
+# Run classifier with Ensembl IDs
+classify_samples(
+  this_data = your_data,
+  gene_id = "ensembl_gene_id"
+)
+```
 
 The classifier works with both bulk RNA-seq and microarray platforms, requiring a minimum of ~200 overlapping genes from the signature gene sets for reliable classification.
 

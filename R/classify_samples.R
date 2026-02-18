@@ -10,7 +10,9 @@
 #'
 #' @param this_data Required parameter. Data frame or matrix with expression values.
 #' @param gene_id Specify the type of gene identifier used in `this_data`. Accepted values are;
-#' hgnc_symbol (default) or ensembl_gene_id.
+#' hgnc_symbol (default) or ensembl_gene_id. The function expects the incoming expression data to 
+#' have gene identifiers as row names. If Ensembl IDs are selected, the function also expects them 
+#' to be non-versioned for a successful conversion to HGNC symbols.
 #' @param threshold_progression Threshold to flag a sample as high risk of progression, default is
 #' 0.58.
 #' @param threshold_grade Threshold to flag a sample as high grade, default is 0.5.
@@ -90,6 +92,17 @@ classify_samples = function(this_data = NULL,
     stop("Input data is missing...")
   }
 
+  #check if gene identifiers are in rownames
+  if(is.null(rownames(this_data)) || all(rownames(this_data) == as.character(1:nrow(this_data)))) {
+    stop(
+      "Gene identifiers not found in rownames.\n",
+      "  Expression data must have gene identifiers (HGNC symbols or Ensembl IDs) as rownames.\n\n",
+      "  If genes are in a column, set them as rownames:\n",
+      "    rownames(your_data) <- your_data$gene_column\n",
+      "    your_data <- your_data[, -gene_column_index]"
+    )
+  }
+  
   if(verbose) {
     cat("\n", rep("=", 60), sep = "")
     cat("\n  LUND TAXONOMY CLASSIFIER")
@@ -139,13 +152,24 @@ classify_samples = function(this_data = NULL,
     if(!exists("tx2gene")) {
       stop("Mapping table 'tx2gene' not found. Please provide a data.frame with columns 'gene_id' and 'gene_name'.")
     }
+    
+    # Check if rownames look like Ensembl IDs
+    sample_rownames <- head(rownames(this_data), 10)
+    if(!any(grepl("^ENSG[0-9]{11}", sample_rownames))) {
+      warning(
+        "Rownames do not appear to be Ensembl gene IDs.\n",
+        "  Expected format: ENSG followed by 11 digits (e.g., ENSG00000141510)\n",
+        "  First few rownames: ", paste(head(rownames(this_data), 3), collapse = ", "), "\n",
+        "  Proceeding with conversion attempt...\n"
+      )
+    }
 
     hgnc_mapped <- tx2gene$gene_name[match(rownames(this_data), tx2gene$gene_id)]
     valid <- !is.na(hgnc_mapped) & hgnc_mapped != ""
     this_data <- this_data[valid, , drop = FALSE]
     rownames(this_data) <- hgnc_mapped[valid]
     gene_id <- "hgnc_symbol"
-
+    
     if(verbose) {
       cat("  Genes mapped:", sum(valid), "\n")
       cat("  Genes unmapped:", sum(!valid), "\n")
@@ -190,6 +214,9 @@ classify_samples = function(this_data = NULL,
   prediction$predictions_classes = colnames(pred_order)[max.col(replace(pred_order, is.na(pred_order), -Inf), ties.method = "first")]
 
   subtype_counts_5c <- table(factor(prediction$predictions_classes, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE")))
+  
+  # Initialize suburo_counts for cases where no Uro samples exist
+  suburo_counts <- table(factor(character(0), levels = c("UroA", "UroB", "UroC")))
 
   # Step 2: Uro subclassification
   if("Uro" %in% prediction$predictions_classes){

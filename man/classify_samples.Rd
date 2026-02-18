@@ -25,7 +25,9 @@ classify_samples(
 \item{this_data}{Required parameter. Data frame or matrix with expression values.}
 
 \item{gene_id}{Specify the type of gene identifier used in \code{this_data}. Accepted values are;
-hgnc_symbol (default) or ensembl_gene_id.}
+hgnc_symbol (default) or ensembl_gene_id. The function expects the incoming expression data to
+have gene identifiers as row names. If Ensembl IDs are selected, the function also expects them
+to be non-versioned for a successful conversion to HGNC symbols.}
 
 \item{threshold_progression}{Threshold to flag a sample as high risk of progression, default is
 0.58.}
