@@ -28,11 +28,20 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
 
-      - name: Install packages
+      - name: Install BiocManager and Bioconductor packages
+        run: |
+          install.packages("BiocManager")
+          BiocManager::install(c("ComplexHeatmap"))
+        shell: Rscript {0}
+
+      - name: Install package dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          packages: |
-            any::testthat
+          extra-packages: any::testthat
+          needs: check
+
+      - name: Install LundTaxR package
+        run: R CMD INSTALL .
 
       - name: Run testthat tests
         run: |
