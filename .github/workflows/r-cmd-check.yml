@@ -9,14 +9,6 @@ on:
       - gottfrid-dev
       - pontus-dev
       - '**'
-  pull_request:
-    branches:
-      - main
-      - adam-dev
-      - carina-dev
-      - gottfrid-dev
-      - pontus-dev
-      - '**'
 
 jobs:
   check:
