@@ -104,7 +104,8 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                        plot_font_size = 10,
                                        plot_font_row_size = 7,
                                        out_path = NULL,
-                                       out_format = "png"){
+                                       out_format = "png",
+                                       col_width = NULL){
   
   #check incoming data and parameter combinations
   if(is.null(these_predictions) | !is.list(these_predictions)){
@@ -161,6 +162,8 @@ plot_classification_heatmap = function(these_predictions = NULL,
   }
   
   #gene signatures for plotting
+  heatmap_width = if(!is.null(col_width)) unit(ncol(this_data) * col_width, "mm") else NULL
+  
   genes_to_plot = list(Early_CC = c(signatures$proliferation[which(signatures$proliferation$signature == "EarlyCellCycle"), 1]),
                        Late_CC = c(signatures$proliferation[which(signatures$proliferation$signature == "LateCellCycle"), 1]),
                        Late_Early = NULL,
@@ -194,7 +197,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                         border = NA, 
                                         col = NA), 
                               bar_width = 1, 
-                              height = unit(5, "mm"))
+                              height = unit(4, "mm"))
     }else{
       this_bar = NULL
     }
@@ -258,7 +261,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                        UroC = bar8,
                                        na_col = "gray83", 
                                        gap = unit(2, "mm"),
-                                       simple_anno_size = unit(10, "mm"),
+                                       simple_anno_size = unit(4, "mm"),
                                        simple_anno_size_adjust = TRUE,
                                        show_legend = show_ann_legend,
                                        border = TRUE,
@@ -288,8 +291,8 @@ plot_classification_heatmap = function(these_predictions = NULL,
     row_title_cc = c("Early Cell Cycle", "Late Cell Cycle")
     
     #late and Early scores
-    late_score = apply(this_data[intersect(rownames(this_data),genes_to_plot$Late_CC),], 2, median)
-    early_score = apply(this_data[intersect(rownames(this_data),genes_to_plot$Early_CC),], 2, median)
+    late_score = apply(this_data[intersect(rownames(this_data),genes_to_plot$Late_CC),], 2, function(x) median(x, na.rm = TRUE))
+    early_score = apply(this_data[intersect(rownames(this_data),genes_to_plot$Early_CC),], 2, function(x) median(x, na.rm = TRUE))
     
     #ratio
     late_early_ratio = late_score - early_score
@@ -298,9 +301,9 @@ plot_classification_heatmap = function(these_predictions = NULL,
     genes_to_plot$Late_Early = late_early_ratio
     
     #create color palette for late/early
-    col_fun_cc = circlize::colorRamp2(c(quantile(late_early_ratio, 0.05),
-                                        median(late_early_ratio),
-                                        quantile(late_early_ratio, 0.95)),
+    col_fun_cc = circlize::colorRamp2(c(quantile(late_early_ratio, 0.05, na.rm = TRUE),
+                                        median(late_early_ratio, na.rm = TRUE),
+                                        quantile(late_early_ratio, 0.95, na.rm = TRUE)),
                                       c("#2166AC","white", "#B2182B"))
     
     if(is.null(this_sample_order)){
@@ -355,7 +358,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   #draw heatmap- late/early
   hm_pred_lateearly = Heatmap(this_data[genes_cc,, drop = FALSE],
                               top_annotation = if(!is.null(custom_annotation)) {
-                                c(hm_a_predictions, custom_annotation)
+                                c(custom_annotation, hm_a_predictions, gap = unit(2, "mm"))
                               } else {
                                 hm_a_predictions
                               },
@@ -450,9 +453,9 @@ plot_classification_heatmap = function(these_predictions = NULL,
     genes_to_plot$Circuit_score = circuit_score
     
     #generate color palette
-    col_fun_circ = circlize::colorRamp2(c(quantile(circuit_score, 0.10),
-                                          median(circuit_score),
-                                          quantile(circuit_score, 0.90)),
+    col_fun_circ = circlize::colorRamp2(c(quantile(circuit_score, 0.10, na.rm = TRUE),
+                                          median(circuit_score, na.rm = TRUE),
+                                          quantile(circuit_score, 0.90, na.rm = TRUE)),
                                         c("#2166AC","white", "#B2182B"))
     
     col = list(`Circuit Score` = col_fun_circ)
@@ -604,9 +607,9 @@ plot_classification_heatmap = function(these_predictions = NULL,
     genes_to_plot$BaSq_ratio = basq_ratio
     
     #generate color palette
-    col_fun_basq = circlize::colorRamp2(c(quantile(basq_ratio, 0.10),
-                                          median(basq_ratio),
-                                          quantile(basq_ratio, 0.90)),
+    col_fun_basq = circlize::colorRamp2(c(quantile(basq_ratio, 0.10, na.rm = TRUE),
+                                          median(basq_ratio, na.rm = TRUE),
+                                          quantile(basq_ratio, 0.90, na.rm = TRUE)),
                                         c("#2166AC","white", "#B2182B"))
     
     col = list(`Ba/Sq Ratio` = col_fun_basq)
@@ -729,9 +732,9 @@ plot_classification_heatmap = function(these_predictions = NULL,
     genes_to_plot$ERBB_score = erbb_score
     
     #generate color palette
-    col_fun_erbb = circlize::colorRamp2(c(quantile(erbb_score, 0.10),
-                                          median(erbb_score),
-                                          quantile(erbb_score, 0.90)),
+    col_fun_erbb = circlize::colorRamp2(c(quantile(erbb_score, 0.10, na.rm = TRUE),
+                                          median(erbb_score, na.rm = TRUE),
+                                          quantile(erbb_score, 0.90, na.rm = TRUE)),
                                         c("#2166AC","white", "#B2182B"))
     
     col = list(`ERBB Score` = col_fun_erbb)
@@ -871,15 +874,15 @@ plot_classification_heatmap = function(these_predictions = NULL,
   if(length(genes_immune) != 0){
     
     #calculate immune score
-    immune_score = apply(this_data[genes_immune,],2,median)
+    immune_score = apply(this_data[genes_immune,], 2, function(x) median(x, na.rm = TRUE))
     
     #add immune scores back to genes_to_plot object
     genes_to_plot$Immune141_UP_score = immune_score
     
     #generate color palette
-    col_fun_immune = circlize::colorRamp2(c(quantile(immune_score, 0.10),
-                                            median(immune_score),
-                                            quantile(immune_score, 0.90)),
+    col_fun_immune = circlize::colorRamp2(c(quantile(immune_score, 0.10, na.rm = TRUE),
+                                            median(immune_score, na.rm = TRUE),
+                                            quantile(immune_score, 0.90, na.rm = TRUE)),
                                           c("#2166AC","white", "#B2182B"))
   }else{
     message("Genes involved in the Immune141_UP score are missing.
@@ -892,15 +895,15 @@ plot_classification_heatmap = function(these_predictions = NULL,
   if(length(genes_stroma) != 0){
     
     #calculate stromal score
-    stromal_score <- apply(this_data[genes_stroma,],2,median)
+    stromal_score <- apply(this_data[genes_stroma,], 2, function(x) median(x, na.rm = TRUE))
     
     #add stromal scores back to genes_to_plot object
     genes_to_plot$Stromal141_UP_score = stromal_score
     
     #generate color palette
-    col_fun_stromal = circlize::colorRamp2(c(quantile(stromal_score, 0.10),
-                                             median(stromal_score),
-                                             quantile(stromal_score, 0.90)),
+    col_fun_stromal = circlize::colorRamp2(c(quantile(stromal_score, 0.10, na.rm = TRUE),
+                                             median(stromal_score, na.rm = TRUE),
+                                             quantile(stromal_score, 0.90, na.rm = TRUE)),
                                            c("#2166AC","white", "#B2182B"))
   }else{
     message("Genes involved in the Stromal141_UP score are missing.
@@ -934,7 +937,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                         col = col_fun,
                         column_split = split,
                         column_title = NULL,
-                        row_title = "Neuronal Cell Markers",
+                        row_title = "Neuroendocrine Markers",
                         bottom_annotation = hm_a_immune_stroma,
                         cluster_row_slices = FALSE,
                         cluster_column_slices = FALSE,
@@ -1008,16 +1011,16 @@ plot_classification_heatmap = function(these_predictions = NULL,
     
     #proliferation
     col_fun_proliferation =
-      circlize::colorRamp2(c(quantile(these_predictions$scores$proliferation_score, 0.05),
-                             median(these_predictions$scores$proliferation_score),
-                             quantile(these_predictions$scores$proliferation_score, 0.95)),
+      circlize::colorRamp2(c(quantile(these_predictions$scores$proliferation_score, 0.05, na.rm = TRUE),
+                             median(these_predictions$scores$proliferation_score, na.rm = TRUE),
+                             quantile(these_predictions$scores$proliferation_score, 0.95, na.rm = TRUE)),
                            c("#2166AC","white", "#B2182B"))
     
     #progression
     col_fun_progression =
-      circlize::colorRamp2(c(quantile(these_predictions$scores$progression_score, 0.05),
-                             median(these_predictions$scores$progression_score),
-                             quantile(these_predictions$scores$progression_score, 0.90)),
+      circlize::colorRamp2(c(quantile(these_predictions$scores$progression_score, 0.05, na.rm = TRUE),
+                             median(these_predictions$scores$progression_score, na.rm = TRUE),
+                             quantile(these_predictions$scores$progression_score, 0.90, na.rm = TRUE)),
                            c("#2166AC","white", "#B2182B"))
     
     
@@ -1140,11 +1143,13 @@ plot_classification_heatmap = function(these_predictions = NULL,
   if(plot_signature_scores && !is.null(signature_heatmaps)) {
     final_hm = draw(main_heatmaps %v% signature_heatmaps,
                     column_title_gp = gpar("fontface", fontsize = 24),
-                    column_title = plot_title)
+                    column_title = plot_title,
+                    heatmap_width = heatmap_width)
   } else {
     final_hm = draw(main_heatmaps,
                     column_title_gp = gpar("fontface", fontsize = 24),
-                    column_title = plot_title)
+                    column_title = plot_title,
+                    heatmap_width = heatmap_width)
   }
   
   hm_sample_order <- column_order(final_hm@ht_list$hm_early_late)

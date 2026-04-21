@@ -26,7 +26,8 @@ plot_classification_heatmap(
   plot_font_size = 10,
   plot_font_row_size = 7,
   out_path = NULL,
-  out_format = "png"
+  out_format = "png",
+  col_width = NULL
 )
 }
 \arguments{
