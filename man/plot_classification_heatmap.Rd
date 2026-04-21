@@ -91,6 +91,10 @@ heatmap. Note, the title of the plot will always be twice that of the set value 
 
 \item{out_format}{Required parameter if \code{out_path} is specified. Can be "png" (default) or "pdf".
 The user can control the dimensions with \code{plot_width} and \code{plot_height}.}
+
+\item{col_width}{Optional parameter to force column width (sample width). Useful for when
+comparing multiple cohorts and the width of the plot needs to be proportional to the total number
+of samples. Default is NULL.}
 }
 \value{
 Draws heatmap and silently returns the sample order.
