@@ -127,14 +127,8 @@ plot_classification_heatmap = function(these_predictions = NULL,
     }
   }
   
-  #scale and set this_data as matrix
-  if(norm){
-    this_data = as.matrix(this_data)
-    this_data = scale(t(this_data))
-    this_data = t(this_data)
-  }else{
-    this_data = as.matrix(this_data)
-  }
+  #convert to matrix
+  this_data = as.matrix(this_data)
   
   #convert ensembl gene id to hgnc symbols
   if(gene_id == "ensembl_gene_id"){
@@ -158,6 +152,17 @@ plot_classification_heatmap = function(these_predictions = NULL,
     
     #convert back to expected name
     this_data = mutated_data
+  }
+  
+  #scale expression data for plotting only (score calculations use unscaled this_data)
+  if(norm){
+     #zscore
+    plot_data = t(scale(t(this_data)))
+  }else{
+    # Row median centering for log-transformed data
+    plot_data = this_data
+    row_medians <- apply(plot_data, 1, median)
+    plot_data <- sweep(plot_data, 1, row_medians, FUN = "-")
   }
   
   #gene signatures for plotting
@@ -353,7 +358,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   col_fun = circlize::colorRamp2(c(-2, 0, 2), c("#4DF76F", "black", "#F74D4D"))
   
   #draw heatmap- late/early
-  hm_pred_lateearly = Heatmap(this_data[genes_cc,, drop = FALSE],
+  hm_pred_lateearly = Heatmap(plot_data[genes_cc,, drop = FALSE],
                               top_annotation = if(!is.null(custom_annotation)) {
                                 c(hm_a_predictions, custom_annotation)
                               } else {
@@ -388,7 +393,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_ud = genes_to_plot$UroDiff
   genes_ud = genes_ud[which(genes_ud %in% rownames(this_data))]
   
-  hm_luminal_tfs = Heatmap(this_data[genes_ud,,drop = FALSE],
+  hm_luminal_tfs = Heatmap(plot_data[genes_ud,,drop = FALSE],
                            name = "hm_luminal_diff_tfs",
                            col = col_fun,
                            column_split = split,
@@ -414,7 +419,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_upk = genes_to_plot$UPKs
   genes_upk = genes_upk[which(genes_upk %in% rownames(this_data))]
   
-  hm_luminal_gen = Heatmap(this_data[genes_upk,,drop = FALSE],
+  hm_luminal_gen = Heatmap(plot_data[genes_upk,,drop = FALSE],
                            name = "hm_luminal_diff_genes",
                            row_title = "Luminal Differentiation Genes",
                            column_title = NULL,
@@ -468,7 +473,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                           annotation_name_gp = gpar(fontsize = plot_font_row_size))
     
     #draw heatmap 4 - circuit score
-    hm_circuitscore = Heatmap(this_data[genes_circ,, drop = FALSE],
+    hm_circuitscore = Heatmap(plot_data[genes_circ,, drop = FALSE],
                               name = "hm_gu_vs_uro",
                               row_title = "GU vs. Uro",
                               column_title = NULL,
@@ -497,7 +502,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
             \nCircuit score will not be calculated...")
     
     #draw heatmap 4 - circuit score
-    hm_circuitscore = Heatmap(this_data[genes_circ,,drop = FALSE],
+    hm_circuitscore = Heatmap(plot_data[genes_circ,,drop = FALSE],
                               name = "hm_gu_vs_uro",
                               row_title = "GU vs. Uro",
                               column_title = NULL,
@@ -530,7 +535,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_fgfr3 = genes_fgfr3[which(genes_fgfr3 %in% rownames(this_data))]
   
   if(length(genes_fgfr3) != 0){
-    hm_fgfr3 = Heatmap(this_data[genes_fgfr3,, drop = FALSE],
+    hm_fgfr3 = Heatmap(plot_data[genes_fgfr3,, drop = FALSE],
                        name = "hm_fgfr3_signature",
                        col = col_fun,
                        column_split = split,
@@ -561,7 +566,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   
   ########################################## TP63 ##################################################
   if("TP63" %in% rownames(this_data)){
-    tp63 = this_data["TP63",, drop = FALSE]
+    tp63 = plot_data["TP63",, drop = FALSE]
     rownames(tp63) = c("TP63")
     
     #draw heatm 4_1 - TP63
@@ -599,8 +604,8 @@ plot_classification_heatmap = function(these_predictions = NULL,
   if(length(genes_basq) == 4) {
     
     #calculate BaSq ratio
-    basq_ratio = apply(this_data, 2, function(col) sum(col[c("KRT5", "KRT14", "FOXA1")]) - sum(col[c("GATA3")]))
-    
+    basq_ratio = apply(this_data , 2, function(col) mean(col[c("KRT5", "KRT14")]) - mean(col[c("FOXA1", "GATA3")]))
+
     genes_to_plot$BaSq_ratio = basq_ratio
     
     #generate color palette
@@ -622,7 +627,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                   annotation_name_gp = gpar(fontsize = plot_font_row_size))
     
     #draw heatmap 6 - BaSq ratio
-    hm_basq = Heatmap(this_data[genes_basq,, drop = FALSE],
+    hm_basq = Heatmap(plot_data[genes_basq,, drop = FALSE],
                       name = "hm_basq_definition",
                       bottom_annotation = hm_a_basq,
                       col = col_fun,
@@ -652,7 +657,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
             \nBaSq ratio will not be calculated...")
     
     #draw heatmap 6 - BaSq ratio
-    hm_basq = Heatmap(this_data[genes_basq,,drop = FALSE],
+    hm_basq = Heatmap(plot_data[genes_basq,,drop = FALSE],
                       name = "hm_basq_definition",
                       bottom_annotation = ha6,
                       col = col_fun,
@@ -686,7 +691,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_krt = genes_krt[which(genes_krt %in% rownames(this_data))]
   
   if(length(genes_krt) != 0){
-    hm_keratinization = Heatmap(this_data[genes_krt,,drop = FALSE],
+    hm_keratinization = Heatmap(plot_data[genes_krt,,drop = FALSE],
                                 name = "hm_keratinization_signature",
                                 col = col_fun,
                                 column_split = split,
@@ -748,7 +753,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
                                       annotation_name_gp = gpar(fontsize = plot_font_row_size))
     
     #draw heatmap 10, ERBB scores
-    hm_erbscore = Heatmap(this_data[genes_erbb,,drop = FALSE],
+    hm_erbscore = Heatmap(plot_data[genes_erbb,,drop = FALSE],
                           name = "hm_erbb_receptors",
                           bottom_annotation = hm_a_erbscore,
                           col = col_fun,
@@ -781,7 +786,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     hm_a_erbscore = NULL
     
     #draw heatmap 10, ERBB scores
-    hm_erbscore = Heatmap(this_data[genes_erbb,,drop = FALSE],
+    hm_erbscore = Heatmap(plot_data[genes_erbb,,drop = FALSE],
                           name = "hm_erbb_receptors",
                           bottom_annotation = ha10,
                           col = col_fun,
@@ -815,7 +820,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_ad = genes_to_plot$Adhesion
   genes_ad = genes_ad[which(genes_ad %in% rownames(this_data))]
   
-  hm_adhesion = Heatmap(this_data[genes_ad,,drop = FALSE],
+  hm_adhesion = Heatmap(plot_data[genes_ad,,drop = FALSE],
                         name = "hm_cell_adhesion",
                         col = col_fun,
                         column_split = split,
@@ -841,7 +846,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_myc = genes_to_plot$MYC
   genes_myc = genes_myc[which(genes_myc %in% rownames(this_data))]
   
-  hm_myc = Heatmap(this_data[genes_myc,,drop = FALSE],
+  hm_myc = Heatmap(plot_data[genes_myc,,drop = FALSE],
                    name ="hm_myc_tfs",
                    col = col_fun,
                    column_split = split,
@@ -929,7 +934,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   genes_ne = genes_ne[which(genes_ne %in% rownames(this_data))]
   
   #draw heatmap 11 - ScNE, immune scores and stromal scores
-  hm_neuronal = Heatmap(this_data[genes_ne,,drop = FALSE],
+  hm_neuronal = Heatmap(plot_data[genes_ne,,drop = FALSE],
                         name = "hm_neuronal_cell_markers",
                         col = col_fun,
                         column_split = split,
