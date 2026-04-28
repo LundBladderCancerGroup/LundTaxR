@@ -48,7 +48,8 @@ annotation.}
 order within each subtype. By default, samples are order by late/early cell cycle ratio (low to
 high).}
 
-\item{norm}{Boolean parameter. Set to TRUE (default) to normalize the data into Z-scaled values.}
+\item{norm}{Boolean parameter. Set to TRUE (default) to normalize the data into Z-scaled values.
+If FALSE, data will be row median centered for plotting.}
 
 \item{plot_scores}{Boolean parameter. Set to TRUE to plot prediction scores for each class.
 Default is FALSE.}
