@@ -31,12 +31,12 @@ int_ratio_score = function(this_data = NULL,
                            verbose = TRUE){
 
   #valid variables
-  valid_vars = c("immune", "score141up", "proliferation", "progression")
+  valid_vars = c("proliferation", "progression")
 
   #check valid variables
   if(!variable %in% valid_vars){
     stop(paste0(
-      "return_this must be one of the following: ",
+      "variable must be one of the following: ",
       paste(valid_vars, collapse = ", ")
     ))
   }

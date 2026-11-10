@@ -52,7 +52,7 @@ with sample ID.}
 \item{row_to_col}{Optional parameter, set to TRUE to convert row names in metadata to a new
 column called sample_id. Default is FALSE.}
 
-\item{plot_title}{A string specifying the title of the plot.}
+\item{plot_title}{A string specifying the title of the plot. Default is "Subtype Forest Plot".}
 
 \item{plot_subtitle}{A string specifying the subtitle of the plot.}
 
@@ -67,7 +67,7 @@ column called sample_id. Default is FALSE.}
 
 \item{out_path}{A string specifying the output path for saving the plot.}
 
-\item{file_name}{A string specifying the file name for the saved plot.}
+\item{file_name}{A string specifying the file name for the saved plot. Default is "subtype".}
 
 \item{return_data}{Set to TRUE to return plot data, default is FALSE.}
 }
