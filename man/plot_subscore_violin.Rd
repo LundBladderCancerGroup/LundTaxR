@@ -40,12 +40,12 @@ PPI).}
 bandwidth while still using the a bandwidth estimator. For example, adjust = 1/2 means use half
 of the default bandwidth.}
 
-\item{plot_scale}{if "area" (default), all violins have the same area (before trimming the
-tails). If "count", areas are scaled proportionally to the number of observations. If "width",
-all violins have the same maximum width.}
+\item{plot_scale}{if "area", all violins have the same area (before trimming the
+tails). If "count", areas are scaled proportionally to the number of observations. If "width"
+(default), all violins have the same maximum width.}
 
-\item{plot_trim}{If TRUE (default), trim the tails of the violins to the range of the data. If
-FALSE, don't trim the tails.}
+\item{plot_trim}{If TRUE, trim the tails of the violins to the range of the data. If
+FALSE (default), don't trim the tails.}
 
 \item{return_data}{Set to TRUE to return tidy data used by the plotting function. Default is
 FALSE.}

@@ -80,7 +80,7 @@ metadata or signature score object, to be tested for. If not provided, the funct
 data to the signature scores returned with \code{classify_samples}.}
 
 \item{exclude_columns}{Optional argument, specify columns you wish to exclude from the standard
-predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).}
+predictor columns. Applies to both the default predictor columns and those given with \code{predictor_columns}.}
 
 \item{significant_p}{Numeric parameter for flagging significant p values. Default is 0.05.}
 
@@ -114,10 +114,10 @@ PPI).}
 PPI).}
 
 \item{plot_order}{Optional parameter for setting the order of scores in the returned plot. Only
-applies if \code{arrange_plot} is set to TRUE.}
+applies if \code{plot_arrange} is set to TRUE.}
 
 \item{plot_arrange}{Boolean parameter, if set to TRUE the user can specify the order of the score
-levels on the y axis. Default is FALSE.}
+levels on the y axis. Default is TRUE.}
 
 \item{return_data}{Boolean parameter, set to TRUE and return the formatted data used for plotting.
 Default is FALSE}

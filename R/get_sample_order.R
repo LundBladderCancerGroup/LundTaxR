@@ -69,14 +69,13 @@ get_sample_order = function(expr_data = NULL,
   #order samples by late_early cell cycle
   sample_order = order(late_early_ratio)
   
-  #end function
-  print(sample_order)
-  
   if(return_this == "late_early"){
     message("Returning late/early ratio...")
     return(as.data.frame(late_early_ratio))
   }else if(return_this == "sample_order"){
     message("Returning sample order...")
     return(sample_order)
+  }else{
+    stop("return_this must be one of the following; sample_order or late_early...")
   }
 }

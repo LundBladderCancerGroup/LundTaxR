@@ -7,7 +7,7 @@
 plot_classification_heatmap(
   these_predictions = NULL,
   this_data = NULL,
-  gene_id = "hgnc_symbols",
+  gene_id = "hgnc_symbol",
   subtype_annotation = "5_class",
   this_sample_order = NULL,
   norm = TRUE,
@@ -70,14 +70,14 @@ Default is FALSE.}
 
 \item{show_hm_legend}{Boolean parameter, set to TRUE to show heatmap legend, default is FALSE.}
 
-\item{ann_height}{Plotting parameter, optional. Annotation height in cm. Default = 8.}
+\item{ann_height}{Plotting parameter, optional. Annotation height in cm. Default = 0.5.}
 
 \item{plot_title}{Plotting parameter. The title for the generated heatmap. Default is "My Plot".}
 
 \item{plot_width}{This parameter controls the width in inches. Default is 14 (4200 pixels at 300
 PPI).}
 
-\item{plot_height}{This parameter controls the height in pixels. Default is 10 (3000 pixels at
+\item{plot_height}{This parameter controls the height in inches. Default is 11 (3300 pixels at
 300 PPI)}
 
 \item{plot_font_size}{Optional parameter to control the size of the font in the generated
@@ -86,7 +86,7 @@ heatmap. Note, the title of the plot will always be twice that of the set value 
 
 \item{plot_font_row_size}{Optional parameter to control the size of the font in the generated
 heatmap. Note, the title of the plot will always be twice that of the set value here
-(default = 8).}
+(default = 7).}
 
 \item{out_path}{Optional, set path to export plot.}
 

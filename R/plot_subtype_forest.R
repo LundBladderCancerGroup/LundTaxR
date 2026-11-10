@@ -19,7 +19,7 @@
 #' with sample ID.
 #' @param row_to_col Optional parameter, set to TRUE to convert row names in metadata to a new 
 #' column called sample_id. Default is FALSE.
-#' @param plot_title A string specifying the title of the plot.
+#' @param plot_title A string specifying the title of the plot. Default is "Subtype Forest Plot".
 #' @param plot_subtitle A string specifying the subtitle of the plot.
 #' @param plot_caption A string specifying the caption of the plot.
 #' @param plot_width A numeric value specifying the width of the plot. Default is 7.
@@ -29,7 +29,7 @@
 #' @param significant_p Numeric parameter for flagging significant p values. Default is 0.05.
 #' @param sig_color Color for annotating significant signatures. Default is red.
 #' @param out_path A string specifying the output path for saving the plot.
-#' @param file_name A string specifying the file name for the saved plot.
+#' @param file_name A string specifying the file name for the saved plot. Default is "subtype".
 #' @param return_data Set to TRUE to return plot data, default is FALSE.
 #' 
 #' @return A combined plot object if `out_path` is NULL. Otherwise, the plot is saved to the 
@@ -269,9 +269,9 @@ plot_subtype_forest = function(these_predictions = NULL,
   #create plot (same as original)
   my_plot = ggplot(stat_results, aes(x = ratio, y = subtype)) +
     geom_point(aes(color = significant), size = 3) +
-    geom_errorbarh(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), height = 0.2) +
+    geom_errorbar(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), width = 0.2, orientation = "y") +
     geom_vline(xintercept = 1, linetype = "dashed", linewidth = 0.3, color = "red") +
-    labs(title = "Subtype Forest Plot", x = "Hazard Ratio", y = "") +
+    labs(title = if(is.null(plot_title)) "Subtype Forest Plot" else plot_title, subtitle = plot_subtitle, caption = plot_caption, x = "Hazard Ratio", y = "") +
     scale_color_manual(values = c("significant" = sig_color, "not significant" = "black")) +
     theme_bw() +
     theme(legend.position = "bottom")
@@ -311,6 +311,9 @@ plot_subtype_forest = function(these_predictions = NULL,
   
   #export or return plot
   if(!is.null(out_path)){
+    if(is.null(file_name)){
+      file_name = "subtype"
+    }
     if(out_format == "pdf"){
       pdf(paste0(out_path, file_name, "_", "hazard_ratio", "_forest.pdf"),
           width = plot_width,

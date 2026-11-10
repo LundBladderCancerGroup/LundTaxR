@@ -24,11 +24,11 @@
 #' @param plot_adjust A multiplicate bandwidth adjustment. This makes it possible to adjust the 
 #' bandwidth while still using the a bandwidth estimator. For example, adjust = 1/2 means use half 
 #' of the default bandwidth.
-#' @param plot_scale if "area" (default), all violins have the same area (before trimming the 
-#' tails). If "count", areas are scaled proportionally to the number of observations. If "width", 
-#' all violins have the same maximum width.
-#' @param plot_trim If TRUE (default), trim the tails of the violins to the range of the data. If 
-#' FALSE, don't trim the tails.
+#' @param plot_scale if "area", all violins have the same area (before trimming the 
+#' tails). If "count", areas are scaled proportionally to the number of observations. If "width" 
+#' (default), all violins have the same maximum width.
+#' @param plot_trim If TRUE, trim the tails of the violins to the range of the data. If 
+#' FALSE (default), don't trim the tails.
 #' @param return_data Set to TRUE to return tidy data used by the plotting function. Default is 
 #' FALSE.
 #'
@@ -91,6 +91,8 @@ plot_subscore_violin = function(these_predictions,
   }else if(this_subtype %in% c("UroA", "UroB", "UroC")){
     these_subtypes = data.frame(these_predictions$predictions_7classes)
     subtype_classes = c("UroA", "UroB", "UroC")
+  }else{
+    stop("this_subtype must be one of the following; Uro, GU, BaSq, Mes, ScNE, UroA, UroB or UroC...")
   }
 
   #convert rowname to columns
