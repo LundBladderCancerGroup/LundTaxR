@@ -9,7 +9,7 @@ int_calc_signatures(
   gene_id = "hgnc_symbol",
   threshold_progression = 0.58,
   threshold_grade = 0.5,
-  adjust = FALSE,
+  adjust = TRUE,
   adj_factor = 5.1431,
   verbose = TRUE
 )
@@ -24,8 +24,8 @@ hgnc_symbol (default) or ensembl_gene_id.}
 
 \item{threshold_grade}{Threshold to flag a sample as high/low grade, default is 0.5.}
 
-\item{adjust}{Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
-on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained.}
+\item{adjust}{Boolean parameter. If TRUE (default), the function will proceed with adjusting the scores based
+on stable genes. If FALSE, no adjustment will be made and the original score values will be retained.}
 
 \item{adj_factor}{Only applicable if adjust is set to TRUE. Allows users to apply a proportional
 adjustment to the normalized scores, enabling finer control over the final output values.
