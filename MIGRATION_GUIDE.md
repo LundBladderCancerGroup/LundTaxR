@@ -29,8 +29,8 @@ Version: 2.0.0
 Description: Molecular subtype classification for bladder cancer using the Lund 
     Taxonomy system. This package replaces LundTax2023Classifier with improved 
     functionality, cleaner design, and modern R package standards.
-URL: https://mattssca.github.io/LundTaxR, https://github.com/mattssca/LundTaxR
-BugReports: https://github.com/mattssca/LundTaxR/issues
+URL: https://lundbladdercancergroup.github.io/LundTaxR, https://github.com/LundBladderCancerGroup/LundTaxR
+BugReports: https://github.com/LundBladderCancerGroup/LundTaxR/issues
 ```
 
 ### 1.2 Package-Level Documentation
@@ -77,7 +77,7 @@ If you're upgrading from the previous package:
 remove.packages("LundTax2023Classifier")
 
 # Install new package
-devtools::install_github("mattssca/LundTaxR")  # Update after transfer
+devtools::install_github("LundBladderCancerGroup/LundTaxR")
 ```
 
 ### Key Changes
@@ -100,9 +100,9 @@ devtools::install_github("mattssca/LundTaxR")  # Update after transfer
   packageStartupMessage(
     "\n",
     crayon::red("WARNING: This package has been replaced by 'LundTaxR'."), "\n",
-    "Please install the new version: ", crayon::green("devtools::install_github('mattssca/LundTaxR')"), "\n",
-    "Documentation: ", crayon::blue("https://mattssca.github.io/LundTaxR"), "\n",
-    "GitHub: ", crayon::blue("https://github.com/mattssca/LundTaxR"), "\n",
+    "Please install the new version: ", crayon::green("devtools::install_github('LundBladderCancerGroup/LundTaxR')"), "\n",
+    "Documentation: ", crayon::blue("https://lundbladdercancergroup.github.io/LundTaxR"), "\n",
+    "GitHub: ", crayon::blue("https://github.com/LundBladderCancerGroup/LundTaxR"), "\n",
     "\n",
     "LundTaxR offers improved functionality, better documentation, and ongoing support.\n"
   )
@@ -116,10 +116,10 @@ Package: LundTax2023Classifier
 Title: [DEPRECATED] Use LundTaxR instead
 Version: 1.9.9  # Increment to show it's the final version
 Description: This package has been replaced by LundTaxR. Please install 
-    the new package: devtools::install_github('mattssca/LundTaxR').
+    the new package: devtools::install_github('LundBladderCancerGroup/LundTaxR').
     LundTaxR provides the same functionality with improvements and ongoing support.
-URL: https://github.com/mattssca/LundTaxR
-BugReports: https://github.com/mattssca/LundTaxR/issues
+URL: https://github.com/LundBladderCancerGroup/LundTaxR
+BugReports: https://github.com/LundBladderCancerGroup/LundTaxR/issues
 Imports: crayon
 ```
 
@@ -128,11 +128,11 @@ Imports: crayon
 ```markdown
 # ⚠️ DEPRECATED PACKAGE ⚠️
 
-**This package has been replaced by [LundTaxR](https://github.com/mattssca/LundTaxR).**
+**This package has been replaced by [LundTaxR](https://github.com/LundBladderCancerGroup/LundTaxR).**
 
 ## 🚀 Install the new package:
 ```r
-devtools::install_github('mattssca/LundTaxR')
+devtools::install_github('LundBladderCancerGroup/LundTaxR')
 ```
 
 ## ✨ What's new in LundTaxR:
@@ -143,9 +143,9 @@ devtools::install_github('mattssca/LundTaxR')
 - **Modern R package standards** and best practices
 
 ## 📚 Resources:
-- **Documentation**: https://mattssca.github.io/LundTaxR
-- **GitHub Repository**: https://github.com/mattssca/LundTaxR
-- **Getting Started Guide**: https://mattssca.github.io/LundTaxR/articles/getting_started_with_LundTaxR.html
+- **Documentation**: https://lundbladdercancergroup.github.io/LundTaxR
+- **GitHub Repository**: https://github.com/LundBladderCancerGroup/LundTaxR
+- **Getting Started Guide**: https://lundbladdercancergroup.github.io/LundTaxR/articles/getting_started_with_LundTaxR.html
 
 ---
 
@@ -184,42 +184,42 @@ devtools::install_github('mattssca/LundTaxR')
 
 1. **Update _pkgdown.yml**
    ```yaml
-   url: https://[RESEARCH-GROUP-NAME].github.io/LundTaxR
+   url: https://lundbladdercancergroup.github.io/LundTaxR
    
    navbar:
      components:
        github:
          icon: fab-github-alt
-         href: https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR
+         href: https://github.com/LundBladderCancerGroup/LundTaxR
    ```
 
 2. **Update DESCRIPTION**
    ```r
-   URL: https://[RESEARCH-GROUP-NAME].github.io/LundTaxR, https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR
-   BugReports: https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR/issues
+   URL: https://lundbladdercancergroup.github.io/LundTaxR, https://github.com/LundBladderCancerGroup/LundTaxR
+   BugReports: https://github.com/LundBladderCancerGroup/LundTaxR/issues
    ```
 
 3. **Update README.md installation instructions**
    ```r
-   devtools::install_github("[RESEARCH-GROUP-NAME]/LundTaxR")
+   devtools::install_github("LundBladderCancerGroup/LundTaxR")
    ```
 
 4. **Update pkgdown/index.md installation instructions**
    ```r
-   devtools::install_github("[RESEARCH-GROUP-NAME]/LundTaxR")
+   devtools::install_github("LundBladderCancerGroup/LundTaxR")
    ```
 
 ### 3.4 Verify GitHub Pages
 
 1. **Check Pages settings**: `Settings → Pages`
 2. **Ensure Source is "GitHub Actions"**
-3. **Verify site builds at new URL**: `https://[RESEARCH-GROUP-NAME].github.io/LundTaxR`
+3. **Verify site builds at new URL**: `https://lundbladdercancergroup.github.io/LundTaxR`
 
 ### 3.5 Update Local Development Environment
 
 ```bash
 # Update remote URL for local repo
-git remote set-url origin https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR.git
+git remote set-url origin https://github.com/LundBladderCancerGroup/LundTaxR.git
 
 # Verify the change
 git remote -v
@@ -265,7 +265,7 @@ git pull origin main
 remove.packages("LundTax2023Classifier")
 
 # 2. Install new package  
-devtools::install_github("[RESEARCH-GROUP-NAME]/LundTaxR")
+devtools::install_github("LundBladderCancerGroup/LundTaxR")
 
 # 3. Update library calls
 library(LundTaxR)  # instead of library(LundTax2023Classifier)
@@ -288,7 +288,7 @@ results <- classify_samples(data)  # Main function likely unchanged
 
 This repository has been archived and is no longer maintained.
 
-**➡️ Active development has moved to: https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR**
+**➡️ Active development has moved to: https://github.com/LundBladderCancerGroup/LundTaxR**
 ```
 
 **GitHub settings:**
@@ -309,7 +309,7 @@ This repository has been archived and is no longer maintained.
 
 **Template for papers/presentations:**
 ```
-We used the LundTaxR R package (version 2.0.0, https://github.com/[RESEARCH-GROUP-NAME]/LundTaxR) 
+We used the LundTaxR R package (version 2.0.0, https://github.com/LundBladderCancerGroup/LundTaxR) 
 for molecular subtype classification of bladder cancer samples.
 ```
 

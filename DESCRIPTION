@@ -46,6 +46,8 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 License: GPL (>= 2) + file LICENSE
+URL: https://github.com/LundBladderCancerGroup/LundTaxR, https://lundbladdercancergroup.github.io/LundTaxR
+BugReports: https://github.com/LundBladderCancerGroup/LundTaxR/issues
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz

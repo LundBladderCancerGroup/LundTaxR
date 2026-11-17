@@ -54,7 +54,7 @@ The Lund Taxonomy is a single-sample molecular classification system that divide
 if (!require(devtools)) install.packages("devtools")
 
 # Install LundTaxR
-devtools::install_github("mattssca/LundTaxR")
+devtools::install_github("LundBladderCancerGroup/LundTaxR")
 ```
 
 ### System Requirements
@@ -101,7 +101,7 @@ For a more comprehensive tutorial and usage examples, please refer to the vignet
 
 ## Documentation
 
-- **Package Website**: [https://mattssca.github.io/LundTaxR/](https://mattssca.github.io/LundTaxR/) - Complete documentation, tutorials, and function reference
+- **Package Website**: [https://lundbladdercancergroup.github.io/LundTaxR/](https://lundbladdercancergroup.github.io/LundTaxR/) - Complete documentation, tutorials, and function reference
 - **Package Documentation**: Access help files with `?function_name`
 - **Vignettes**: Comprehensive tutorials and examples
 
@@ -164,7 +164,7 @@ We welcome contributions!
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/mattssca/LundTaxR/issues)
+- **Issues**: [GitHub Issues](https://github.com/LundBladderCancerGroup/LundTaxR/issues)
 - **Email**: adam.mattsson@med.lu.se
 - **Documentation**: Package help files and vignettes
 

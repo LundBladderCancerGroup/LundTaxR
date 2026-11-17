@@ -1,0 +1,133 @@
+---
+title: "Quality Control of Classification Results"
+name: quality_control
+author: "Adam Mattsson"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    fig_width: 10
+    fig_height: 11
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Quality Control of Classification Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "figures/",
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE
+)
+
+# Load required packages
+library(LundTaxR)
+```
+
+# Introduction
+
+Before using LundTax subtypes and signature scores downstream, it is worth checking that the
+classifier had what it needed. `get_qc_report()` collects this information for a cohort:
+
+- which samples could not be classified, and which calls are low confidence,
+- how many of the genes used by the classifiers and signature scores were found in the data,
+- whether any samples have an expression distribution that differs from the rest of the cohort.
+
+`plot_qc_report()` shows the same information in one figure.
+
+# Generate a QC report
+
+Run the classifier with `include_data = TRUE`, so that the QC report can also check the
+expression data:
+
+```{r classify}
+sjodahl_classes = classify_samples(this_data = sjodahl_2017,
+                                   include_data = TRUE,
+                                   verbose = FALSE)
+
+sjodahl_qc = get_qc_report(these_predictions = sjodahl_classes)
+```
+
+Printing the report gives a short summary:
+
+```{r print-qc}
+sjodahl_qc
+```
+
+Per-sample details are in `$samples`, one row per sample:
+
+```{r samples}
+head(sjodahl_qc$samples[, c("sample_id", "subtype_5_class", "prediction_delta_collapsed",
+                            "low_confidence", "missing_rules_5_class", "expr_median",
+                            "distribution_outlier")])
+```
+
+which makes it easy to list the samples that need a second look:
+
+```{r flagged}
+subset(sjodahl_qc$samples, low_confidence | !classified | distribution_outlier,
+       select = c(sample_id, subtype_5_class, prediction_delta_collapsed))
+```
+
+The report also contains `$signature_coverage`, `$classifier_coverage` and `$data_check` (the
+log2 check). See `?get_qc_report` for all columns.
+
+# Plot the QC report
+
+```{r plot-qc, fig.width = 10, fig.height = 11}
+plot_qc_report(these_qc = sjodahl_qc)
+```
+
+How to read the panels:
+
+- **Prediction confidence**: the difference between the highest and second highest prediction
+  score for each sample. Samples below the dashed line (`delta_threshold`, default 0.2) are
+  flagged as low confidence (crosses).
+- **Expression distribution per sample**: each point is one sample, showing its median expression
+  against its interquartile range. Samples processed like the rest of the cohort form a tight
+  cloud. Samples outside the dashed lines are flagged (red). A sample far to the left or right is
+  shifted overall (e.g. not log2-transformed, or normalized separately); a sample far up or down
+  has an unusual spread (e.g. many zeros).
+- **Signature genes present** and **Classifier rules complete**: the share of the signature genes
+  and classifier gene pairs found in the data.
+- **Missing classifier rules per sample**: samples with at least one rule that could not be
+  evaluated. Samples to the right of the dashed `impute_reject` line are not classified.
+
+To save the figure, use `out_path` (and optionally `out_format`, `file_name`, `plot_width` and
+`plot_height`):
+
+```{r save-plot, eval = FALSE}
+plot_qc_report(these_qc = sjodahl_qc, out_path = "qc/", out_format = "pdf")
+```
+
+# Adjusting the thresholds
+
+The default cut-offs are heuristics for flagging samples worth a second look, not validated
+thresholds. Both can be changed:
+
+```{r thresholds}
+strict_qc = get_qc_report(these_predictions = sjodahl_classes,
+                          delta_threshold = 0.4,
+                          outlier_mads = 2)
+
+strict_qc$summary[, c("n_low_confidence", "n_distribution_outliers")]
+```
+
+# What to do with flagged samples
+
+| Flag | What it means | Suggested action |
+|---|---|---|
+| Not classified | Too many classifier genes missing or NA | Check gene identifiers and missing values for the sample |
+| Low confidence | Two subtypes score almost equally | Report the call with care, or look at the prediction scores |
+| Distribution outlier | Sample processed or normalized differently | Subtype call is usually still fine (gene-pair rules); treat immune/stromal scores and heatmaps with caution |
+
+If `classify_samples()` was run without `include_data = TRUE`, the expression data can be passed
+to `get_qc_report()` with `this_data`. Without any expression data, the report still covers
+prediction confidence, unclassified samples and signature coverage.

@@ -45,7 +45,7 @@ test_that("samples with too many missing genes are kept with NA predictions", {
   data("sjodahl_2017")
 
   expr = sjodahl_2017[, 1:8]
-  classifier_genes = LundTaxR:::classifier_lundtax_5c$RF_scheme$genes
+  classifier_genes = LundTaxR::classifier_lundtax_5c$RF_scheme$genes
   expr[rownames(expr) %in% classifier_genes[1:650], 1] = NA
 
   res = suppressMessages(classify_samples(this_data = expr, verbose = FALSE))
@@ -89,7 +89,7 @@ test_that("get_qc_report works without expression data and flags unclassified sa
   data("sjodahl_2017")
 
   expr = sjodahl_2017[, 1:8]
-  classifier_genes = LundTaxR:::classifier_lundtax_5c$RF_scheme$genes
+  classifier_genes = LundTaxR::classifier_lundtax_5c$RF_scheme$genes
   expr[rownames(expr) %in% classifier_genes[1:650], 1] = NA
 
   res = suppressMessages(classify_samples(this_data = expr, verbose = FALSE))
