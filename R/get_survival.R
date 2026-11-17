@@ -91,27 +91,30 @@ get_survival = function(these_predictions = NULL,
   
   if(is.null(surv_time)){
     stop("The user must provide a column name corresponding to survival time...")
-  }else{
-    if(!surv_time %in% colnames(these_samples_metadata)){
-      stop(paste0(surv_time, " is not a valid column in the incoming metadata..."))
-      if(!is.numeric(these_samples_metadata[,surv_time])){
-        stop("surv_event must be of value numeric...")
-      }
-    }
+  }
+  
+  if(!surv_time %in% colnames(these_samples_metadata)){
+    stop(paste0(surv_time, " is not a valid column in the incoming metadata..."))
+  }
+  
+  if(!is.numeric(these_samples_metadata[[surv_time]])){
+    stop("surv_time must be of value numeric...")
   }
   
   if(is.null(surv_event)){
     stop("The user must provide a column name corresponding to survival event...")
-  }else{
-    if(!surv_event %in% colnames(these_samples_metadata)){
-      stop(paste0(surv_event, " is not a valid column in the incoming metadata..."))
-      if(!is.factor(these_samples_metadata[,surv_event])){
-        stop("surv_event must be a factor...")
-        if(length(levels(these_samples_metadata[,surv_event])) != 2){
-          stop("Levels of surv_event must be exactly 2...")
-        }
-      }
-    }
+  }
+  
+  if(!surv_event %in% colnames(these_samples_metadata)){
+    stop(paste0(surv_event, " is not a valid column in the incoming metadata..."))
+  }
+  
+  if(!is.factor(these_samples_metadata[[surv_event]])){
+    stop("surv_event must be a factor...")
+  }
+  
+  if(length(levels(these_samples_metadata[[surv_event]])) != 2){
+    stop("Levels of surv_event must be exactly 2...")
   }
   
   #run helper

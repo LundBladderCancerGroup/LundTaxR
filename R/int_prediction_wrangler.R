@@ -108,15 +108,21 @@ int_prediction_wrangler = function(these_predictions = NULL,
       
       if(is.null(surv_time) && is.null(surv_event)){
         #check the categorical variable
+        if(is.null(categorical_factor)){
+          stop("The user must provide a column name with categorical_factor...")
+        }
+        
         if(!categorical_factor %in% colnames(these_samples_metadata)){
           stop(paste0(categorical_factor, " is not a valid column in the incoming metadata..."))
-          if(!is.factor(these_samples_metadata[,categorical_factor])){
-            stop("categorical_factor must be a factor...")
-            if(length(levels(these_samples_metadata[,categorical_factor])) != 2){
-              stop("Levels of categorical_factor must be exactly 2...")
-            }
-          }
-        } 
+        }
+        
+        if(!is.factor(these_samples_metadata[[categorical_factor]])){
+          stop("categorical_factor must be a factor...")
+        }
+        
+        if(length(levels(these_samples_metadata[[categorical_factor]])) != 2){
+          stop("Levels of categorical_factor must be exactly 2...")
+        }
       }
       
       #check sample ID in metadata

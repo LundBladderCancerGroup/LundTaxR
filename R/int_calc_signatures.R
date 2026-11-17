@@ -10,8 +10,8 @@
 #' hgnc_symbol (default) or ensembl_gene_id.
 #' @param threshold_progression Threshold to flag a sample as high risk of progression, default is 0.58.
 #' @param threshold_grade Threshold to flag a sample as high/low grade, default is 0.5.
-#' @param adjust Boolean parameter. If TRUE, the function will proceed with adjusting the scores based
-#' on stable genes. If FALSE (default), no adjustment will be made and the original score values will be retained.
+#' @param adjust Boolean parameter. If TRUE (default), the function will proceed with adjusting the scores based
+#' on stable genes. If FALSE, no adjustment will be made and the original score values will be retained.
 #' @param adj_factor Only applicable if adjust is set to TRUE. Allows users to apply a proportional
 #' adjustment to the normalized scores, enabling finer control over the final output values.
 #' After dividing each score by the mean expression of stable genes, the result is multiplied by this factor.
@@ -37,7 +37,7 @@ int_calc_signatures = function(this_data = NULL,
                                gene_id = "hgnc_symbol",
                                threshold_progression = 0.58,
                                threshold_grade = 0.5,
-                               adjust = FALSE,
+                               adjust = TRUE,
                                adj_factor = 5.1431,
                                verbose = TRUE){
 
