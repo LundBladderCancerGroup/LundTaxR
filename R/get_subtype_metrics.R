@@ -14,7 +14,8 @@
 #' @param this_metadata A data frame containing metadata with a `sample_id` column.
 #' @param this_metadata_variable A string specifying the column name in the metadata to be 
 #' summarized.
-#' @param these_predictions A named vector of predictions with sample IDs as names.
+#' @param these_predictions Output from [LundTaxR::classify_samples()]. The prediction vectors 
+#' (`predictions_5classes` / `predictions_7classes`) must have sample IDs as names.
 #' @param factor_level The level of the factor/value in `this_metadata_variable` to count 
 #' (optional). If not provided, will return counts for all levels.
 #' @param subtype_class The classification system, default is 5 class.
@@ -24,6 +25,7 @@
 #' If `factor_level` is NULL, returns counts for all levels.
 #' 
 #' @import dplyr
+#' @importFrom tidyr pivot_wider
 #' 
 #' @export
 #'
@@ -59,12 +61,22 @@ get_subtype_metrics = function(this_metadata = NULL,
     stop("The metadata must contain a 'sample_id' column.")
   }
   
+  #check subtype class
+  if (!subtype_class %in% c("5_class", "7_class")) {
+    stop("subtype_class must be one of the following; 5_class or 7_class...")
+  }
+  
   #check if sample_id is present in predictions
-  if (is.null(names(these_predictions))) {
+  prediction_vector = if (subtype_class == "5_class") these_predictions$predictions_5classes else these_predictions$predictions_7classes
+  if (is.null(names(prediction_vector))) {
     stop("The predictions must have sample IDs as names.")
   }
   
   #check if the desired metadata column is valid
+  if (is.null(this_metadata_variable)) {
+    stop("Please specify a metadata column with `this_metadata_variable`...")
+  }
+  
   if (!this_metadata_variable %in% colnames(this_metadata)) {
     stop("The specified metadata variable is not a valid column in the metadata.")
   }

@@ -55,8 +55,9 @@ rules. Default is TRUE}
 \item{impute_reject}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. A number between 0 and 1 indicating
 the threshold of the missed rules in the sample. Based on this threshold the sample will be
 rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not
-be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results
-for this sample.}
+be imputed in this sample. Default is 0.67. NOTE, rejected samples are kept in the output, but
+their predictions and prediction scores are set to NA. Use \code{\link[=get_qc_report]{get_qc_report()}} to list
+them.}
 
 \item{impute_kNN}{From \code{\link[multiclassPairs:predict_RF]{multiclassPairs::predict_RF()}}. Integer determines the number of the
 nearest samples in the training data to be used in the imputation. Default is 5. It is not

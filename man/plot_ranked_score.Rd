@@ -53,14 +53,14 @@ regression. Default is FALSE.}
 The user can further specify the dimensions of the returned plot with \code{plot_width} and
 \code{plot_height}.}
 
-\item{plot_width}{This parameter controls the width in inches. Default is 4 (1200 pixels at 300
+\item{plot_width}{This parameter controls the width in inches. Default is 8 (2400 pixels at 300
 PPI).}
 
-\item{plot_height}{This parameter controls the height in inches. Default is 4 (1200 pixels at 300
+\item{plot_height}{This parameter controls the height in inches. Default is 5 (1500 pixels at 300
 PPI).}
 
-\item{plot_title}{Required parameter, if \code{out_path} is specified. plot title, will also be pasted
-to the exported file.}
+\item{plot_title}{Optional parameter, set the title for the plot. If not provided, a default
+title is used ("Ranked Signature Score", or "Segments Plot" if \code{seg_plot = TRUE}).}
 
 \item{return_data}{Boolean parameter, set to TRUE and return the formatted data used for
 plotting. Default is FALSE}

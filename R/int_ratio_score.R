@@ -31,12 +31,12 @@ int_ratio_score = function(this_data = NULL,
                            verbose = TRUE){
 
   #valid variables
-  valid_vars = c("immune", "score141up", "proliferation", "progression")
+  valid_vars = c("proliferation", "progression")
 
   #check valid variables
   if(!variable %in% valid_vars){
     stop(paste0(
-      "return_this must be one of the following: ",
+      "variable must be one of the following: ",
       paste(valid_vars, collapse = ", ")
     ))
   }
@@ -59,16 +59,16 @@ int_ratio_score = function(this_data = NULL,
       select(direction_in_prog, !!as.symbol(gene_id))
   }
 
-  #intersect with incoming data
-  int_up_genes = this_data %>%
-    dplyr::filter(rownames(this_data) %in% unique(up_genes[,gene_id]))
+  #work on a matrix
+  this_data = as.matrix(this_data)
 
-  int_down_genes = this_data %>%
-    dplyr::filter(rownames(this_data) %in% unique(down_genes[,gene_id]))
+  #intersect with incoming data
+  up_vector = rownames(this_data)[rownames(this_data) %in% unique(up_genes[,gene_id])]
+  down_vector = rownames(this_data)[rownames(this_data) %in% unique(down_genes[,gene_id])]
 
   #get genes that are not in the incoming data
-  diff_genes_up = setdiff(up_genes[,gene_id], rownames(int_up_genes))
-  diff_genes_down = setdiff(down_genes[,gene_id], rownames(int_down_genes))
+  diff_genes_up = setdiff(up_genes[,gene_id], up_vector)
+  diff_genes_down = setdiff(down_genes[,gene_id], down_vector)
 
   #create data frame with missing gene information
   missing_genes = data.frame(genes = as.character(),
@@ -86,16 +86,12 @@ int_ratio_score = function(this_data = NULL,
                           signature = variable,
                           process = "down")
 
-  #ratio of ranks
-  rank_data = apply(this_data, 2, rank)
-  rank_data = rank_data/nrow(rank_data)
+  #ratio of ranks (ranks within each sample, divided by the number of genes), only computed for the 
+  #signature genes
+  rank_data = int_rank_genes(this_data = this_data, genes = unique(c(up_vector, down_vector)))
 
-  #get vector with relevant genes
-  up_vector = rownames(int_up_genes)
-  down_vector = rownames(int_down_genes)
-
-  median_up_genes = apply(rank_data[up_vector,,drop=F],2,median)
-  median_down_genes = apply(rank_data[down_vector,,drop=F],2,median)
+  median_up_genes = apply(rank_data[up_vector,,drop=FALSE],2,median)
+  median_down_genes = apply(rank_data[down_vector,,drop=FALSE],2,median)
 
   median_up_down = median_up_genes/median_down_genes
 

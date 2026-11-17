@@ -116,7 +116,7 @@ get_glm = function(these_predictions = NULL,
       if(any(!exclude_columns %in% colnames(this_object))){
         stop("One or more columns specified in exclude_columns is not in the incoming data...")
       }else{
-        message(paste0("Excluding the following predictor columns: ", exclude_columns))
+        message(paste0("Excluding the following predictor columns: ", paste(exclude_columns, collapse = ", ")))
         these_columns = setdiff(these_columns, exclude_columns) 
       }
     }
@@ -132,6 +132,7 @@ get_glm = function(these_predictions = NULL,
                           odds_ratio = numeric(),
                           conf_2.5 = numeric(),
                           conf_97.5 = numeric(),
+                          variable = character(),
                           subtype = factor())
     return(empty_df)
   }
@@ -184,8 +185,9 @@ get_glm = function(these_predictions = NULL,
       #extract p-value, odds ratio, and confidence intervals
       stats$p_value = wilcox[[name]]$p.value
       stats$odds_ratio = unname(unlist(exp(suppressMessages(glm[[name]]$coefficients))))[2]
-      stats$conf_2.5 = unname(unlist(exp(suppressMessages(confint(glm[[name]])))))[2]
-      stats$conf_97.5 = unname(unlist(exp(suppressMessages(confint(glm[[name]])))))[4]
+      conf_int = unname(unlist(exp(suppressMessages(confint(glm[[name]])))))
+      stats$conf_2.5 = conf_int[2]
+      stats$conf_97.5 = conf_int[4]
       
       #bind the current results to the overall statistics data frame
       my_stats = rbind(my_stats, stats)

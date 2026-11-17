@@ -24,15 +24,15 @@
 #' @param seg_width Controls the width of the segments if `seg_plot = TRUE`.
 #' @param add_stat Boolean parameter, set to TRUE to add regression lines, p value for each 
 #' regression. Default is FALSE.
-#' @param plot_title Required parameter, if `out_path` is specified. plot title, will also be pasted
-#' to the exported file.
+#' @param plot_title Optional parameter, set the title for the plot. If not provided, a default 
+#' title is used ("Ranked Signature Score", or "Segments Plot" if `seg_plot = TRUE`).
 #' @param out_path Optional, set path to export plot.
 #' @param out_format Required parameter if `out_path` is specified. Can be "png" (default) or "pdf".
 #' The user can further specify the dimensions of the returned plot with `plot_width` and 
 #' `plot_height`.
-#' @param plot_width This parameter controls the width in inches. Default is 4 (1200 pixels at 300 
+#' @param plot_width This parameter controls the width in inches. Default is 8 (2400 pixels at 300 
 #' PPI).
-#' @param plot_height This parameter controls the height in inches. Default is 4 (1200 pixels at 300
+#' @param plot_height This parameter controls the height in inches. Default is 5 (1500 pixels at 300
 #' PPI).
 #' @param return_data Boolean parameter, set to TRUE and return the formatted data used for 
 #' plotting. Default is FALSE
@@ -103,15 +103,13 @@ plot_ranked_score = function(these_predictions = NULL,
                              plot_title = NULL,
                              return_data = FALSE){
   
+  #keep track of whether all subtypes were requested (used for the exported file name)
+  all_subtypes = is.null(this_subtype)
+  
   if(is.null(this_data)){
     #checks
     if(is.null(these_predictions)){
-      stop("these_predictions is missing, should be the return from lund_predict_sub...")
-    }
-    
-    #impute plot title
-    if(is.null(plot_title)){
-      plot_title = this_score
+      stop("these_predictions is missing, should be the output from classify_samples()...")
     }
     
     if(is.null(this_score)){
@@ -122,6 +120,10 @@ plot_ranked_score = function(these_predictions = NULL,
       stop(paste0(this_score, " is not of type numeric..."))
     }
     
+    if(is.null(subtype_class)){
+      stop("subtype_class is missing, should be one of the following; 5_class or 7_class...")
+    }
+    
     #subset on subtype
     if(subtype_class == "5_class"){
       subtypes = data.frame(these_predictions$predictions_5classes) %>% 
@@ -129,7 +131,7 @@ plot_ranked_score = function(these_predictions = NULL,
       if(is.null(this_subtype)){
         this_subtype = c("Uro", "GU", "ScNE", "BaSq", "Mes")
       }else{
-        if(!this_subtype %in% c("Uro", "GU", "ScNE", "BaSq", "Mes")){
+        if(!all(this_subtype %in% c("Uro", "GU", "ScNE", "BaSq", "Mes"))){
           stop("The requested subtype is not available in the selected class..")
         }
       }
@@ -139,7 +141,7 @@ plot_ranked_score = function(these_predictions = NULL,
       if(is.null(this_subtype)){
         this_subtype = c("UroA","UroB","UroC", "GU", "ScNE", "BaSq", "Mes")
       }else{
-        if(!this_subtype %in% c("UroA","UroB","UroC", "GU", "ScNE", "BaSq", "Mes")){
+        if(!all(this_subtype %in% c("UroA","UroB","UroC", "GU", "ScNE", "BaSq", "Mes"))){
           stop("The requested subtype is not available in the selected class..")
         }
       }
@@ -183,6 +185,10 @@ plot_ranked_score = function(these_predictions = NULL,
   
   #get subtitle
   formatted_subtitle <- tools::toTitleCase(gsub("_", " ", this_score))
+  
+  if(seg_plot && !isTRUE(subtype_class %in% c("5_class", "7_class"))){
+    stop("subtype_class must be one of the following when seg_plot = TRUE; 5_class or 7_class...")
+  }
   
   if(seg_plot){
     #get segment data for each subtype
@@ -294,7 +300,7 @@ plot_ranked_score = function(these_predictions = NULL,
       geom_text(data = subtype_labels, 
                 aes(x = x_pos, y = y_pos, label = subtype),
                 hjust = 0, vjust = 0.5, size = 4) +
-      ggtitle(label = "Segments Plot", subtitle = formatted_subtitle) +
+      ggtitle(label = if(is.null(plot_title)) "Segments Plot" else plot_title, subtitle = formatted_subtitle) +
       guides(colour = guide_legend(nrow = 1)) +
       coord_cartesian(xlim = c(-30, max(this_data$rank)), expand = FALSE) +
       scale_x_continuous(limits = c(-30, max(this_data$rank))) +
@@ -304,8 +310,8 @@ plot_ranked_score = function(these_predictions = NULL,
             legend.title = element_blank(),
             panel.grid.major.x = element_blank(),
             panel.grid.minor.x = element_blank(),
-            panel.grid.major.y = element_line( size = 0.2, color = "black"),
-            panel.grid.minor.y = element_line(size = 0.1, color = minor_grid_color),
+            panel.grid.major.y = element_line(linewidth = 0.2, color = "black"),
+            panel.grid.minor.y = element_line(linewidth = 0.1, color = minor_grid_color),
             plot.background = element_rect(fill = "white", color = NA),
             panel.background = element_rect(fill = "white", color = NA),
             panel.border = element_blank(),
@@ -326,16 +332,16 @@ plot_ranked_score = function(these_predictions = NULL,
       xlab("Index") + 
       labs(color = "Subtype") +
       ylab(formatted_subtitle) +
-      ggtitle(label = paste0("Ranked Signature Score")) +
+      ggtitle(label = if(is.null(plot_title)) "Ranked Signature Score" else plot_title) +
       theme_bw() +
       theme(legend.position = "right", 
             axis.line.x = element_blank())
   }
   
-  if(is.null(this_subtype)){
+  if(all_subtypes){
     file_name = paste0(subtype_class, "_", this_score)
   }else{
-    file_name = paste0(this_subtype, "_", this_score)
+    file_name = paste0(paste(this_subtype, collapse = "_"), "_", this_score)
   }
   
   if(seg_plot){

@@ -57,12 +57,14 @@ int_calc_score = function(this_data = NULL,
       select(signature, !!as.symbol(gene_id))
   }
 
-  #subset expression data to relevant prostate genes
-  genes_int = this_data %>%
-    dplyr::filter(rownames(this_data) %in% unique(these_signatures[,gene_id]))
+  #work on a matrix
+  this_data = as.matrix(this_data)
+
+  #subset expression data to relevant genes
+  genes_int = rownames(this_data)[rownames(this_data) %in% unique(these_signatures[,gene_id])]
 
   #get genes that are not in the incoming data
-  diff_genes = setdiff(these_signatures[,gene_id], rownames(genes_int))
+  diff_genes = setdiff(these_signatures[,gene_id], genes_int)
 
   #create data frame with missing gene information
   missing_genes = data.frame(genes = as.character(),
@@ -80,18 +82,18 @@ int_calc_score = function(this_data = NULL,
                                         ncol = length(unique(these_signatures$signature)),
                                         dimnames = list(colnames(this_data), unique(these_signatures$signature))))
 
+  #mean expression of the signature genes in each sample
   for(i in unique(these_signatures$signature)){
     genes_signature_int = intersect(rownames(this_data),these_signatures[these_signatures$signature == i, gene_id])
-    res = unlist(lapply(1:ncol(this_data),function(x) {mean(this_data[genes_signature_int,x])}))
-    score_results[,i] = res
+    score_results[,i] = colMeans(this_data[genes_signature_int, , drop = FALSE])
   }
 
+  #divide each sample's scores by the mean expression of the stable genes in that sample
   if(adjust){
     StableGenes <- signatures$stable_genes
     stable_genes_int <- intersect(rownames(this_data),StableGenes[,gene_id])
-    score_results <- do.call("rbind",lapply(1:nrow(score_results),function(x){
-      (score_results[x,]/mean(this_data[stable_genes_int,x]))*adj_factor
-    }))
+    stable_means = colMeans(this_data[stable_genes_int, , drop = FALSE])
+    score_results <- (score_results / stable_means) * adj_factor
   }
 
   #calculate proportions

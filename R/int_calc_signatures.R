@@ -151,7 +151,7 @@ int_calc_signatures = function(this_data = NULL,
                "fibroblasts_proportion", "smooth_muscle_proportion", "immune141_up", "stromal141_up")
 
   merge_scores = merge_scores %>%
-    rename_at(vars(oldnames), ~ newnames)
+    rename_at(vars(all_of(oldnames)), ~ newnames)
 
   #set column types
   factor_cols = c("molecular_grade_who_1999", "molecular_grade_who_2022", "progression_risk")

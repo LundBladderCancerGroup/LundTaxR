@@ -12,16 +12,17 @@ The data frame should have row names as sample IDs and columns corresponding to 
 types and scores.}
 }
 \value{
-A data frame with the original scores, normalized scores, and the calculated
-immune/stroma ratio. The row names are the sample IDs.
+A data frame with the original scores and the calculated immune/stroma ratio. The row
+names are the sample IDs.
 }
 \description{
-Internal function called by \code{plot_hm_scores} when \code{proportional_scores = TRUE}.
+Internal function called by \code{plot_signatures_heatmap} when \code{proportional_scores = TRUE}.
 Not meant for out-of-package usage.
 }
 \details{
-This function normalizes specific prediction scores so that each value is a fraction of
-the total score for that row. It also calculates the immune/stroma ratio.
+This function calculates the immune/stroma ratio (\code{immune141_up} minus \code{stromal141_up})
+and appends it to the scores. The proportional immune and stromal scores used for plotting are
+already part of the scores object (the \verb{*_proportion} columns).
 }
 \examples{
 \dontrun{

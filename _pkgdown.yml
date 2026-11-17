@@ -1,4 +1,4 @@
-url: https://mattssca.github.io/LundTaxR
+url: https://lundbladdercancergroup.github.io/LundTaxR
 
 template:
   bootstrap: 5
@@ -17,7 +17,7 @@ navbar:
   components:
     github:
       icon: fa-github
-      href: https://github.com/mattssca/LundTaxR
+      href: https://github.com/LundBladderCancerGroup/LundTaxR
 
 articles:
   - title: "Getting Started with LundTaxR"
@@ -29,6 +29,11 @@ articles:
     desc: "Advanced techniques for molecular subtype classification"
     contents:
     - advanced_classification_workflows
+
+  - title: "Quality Control of Classification Results"
+    desc: "Check classification confidence, gene coverage and expression distributions"
+    contents:
+    - quality_control
 
   - title: "Data Retrieval and Utility Workflows"
     desc: "Functions for data extraction and utility operations"
@@ -55,6 +60,9 @@ reference:
     desc: "Main functions for molecular subtype classification"
     contents:
     - classify_samples
+    - get_qc_report
+    - print.lundtax_qc
+    - plot_qc_report
     - lundtax_predict_sub
     - predict_LundTax2023
     

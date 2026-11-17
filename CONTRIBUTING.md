@@ -5,17 +5,19 @@ This guide will help you contribute to the LundTaxR project, even if you have li
 ## Review Objects
 These are the following objects that needs review from you:
 
-- [Advanced Classification Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/advanced_classification_workflows.Rmd)
+- [Advanced Classification Workflows](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/advanced_classification_workflows.Rmd)
 
-- [Data Retrieval and Utility Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/data_retrieval_and_utility_workflows.Rmd)
+- [Data Retrieval and Utility Workflows](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/data_retrieval_and_utility_workflows.Rmd)
 
-- [Getting Started with LundTaxR](https://github.com/mattssca/LundTaxR/blob/main/vignettes/getting_started_with_LundTaxR.Rmd)
+- [Getting Started with LundTaxR](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/getting_started_with_LundTaxR.Rmd)
 
-- [Survival and Statistical Analysis Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/survival_and_statistical_analysis_workflows.Rmd)
+- [Quality Control of Classification Results](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/quality_control.Rmd)
 
-- [Visualization Workflows](https://github.com/mattssca/LundTaxR/blob/main/vignettes/visualization_workflows.Rmd)
+- [Survival and Statistical Analysis Workflows](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/survival_and_statistical_analysis_workflows.Rmd)
 
-- [README](https://github.com/mattssca/LundTaxR/blob/main/README.md)
+- [Visualization Workflows](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/vignettes/visualization_workflows.Rmd)
+
+- [README](https://github.com/LundBladderCancerGroup/LundTaxR/blob/main/README.md)
 
 
 ## 1. Install Git
@@ -26,7 +28,7 @@ These are the following objects that needs review from you:
 Open a terminal (or Git Bash on Windows) and run:
 
 ```
-git clone https://github.com/mattssca/LundTaxR.git
+git clone https://github.com/LundBladderCancerGroup/LundTaxR.git
 cd LundTaxR
 ```
 
@@ -59,7 +61,7 @@ git push origin your-branch-name
 ```
 
 ## 7. Create a Pull Request (PR)
-- Go to https://github.com/mattssca/LundTaxR in your web browser.
+- Go to https://github.com/LundBladderCancerGroup/LundTaxR in your web browser.
 - You should see a prompt to "Compare & pull request" for your branch. Click it.
 - Add a description of your changes and submit the pull request.
 

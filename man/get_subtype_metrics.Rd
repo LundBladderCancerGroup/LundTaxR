@@ -18,7 +18,8 @@ get_subtype_metrics(
 \item{this_metadata_variable}{A string specifying the column name in the metadata to be
 summarized.}
 
-\item{these_predictions}{A named vector of predictions with sample IDs as names.}
+\item{these_predictions}{Output from \code{\link[=classify_samples]{classify_samples()}}. The prediction vectors
+(\code{predictions_5classes} / \code{predictions_7classes}) must have sample IDs as names.}
 
 \item{factor_level}{The level of the factor/value in \code{this_metadata_variable} to count
 (optional). If not provided, will return counts for all levels.}

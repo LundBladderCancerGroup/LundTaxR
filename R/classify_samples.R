@@ -36,8 +36,9 @@
 #' @param impute_reject From [multiclassPairs::predict_RF()]. A number between 0 and 1 indicating
 #' the threshold of the missed rules in the sample. Based on this threshold the sample will be
 #' rejected (i.e. skipped if higher than the impute_reject threshold) and the missed rules will not
-#' be imputed in this sample. Default is 0.67. NOTE, The results object will not have any results
-#' for this sample.
+#' be imputed in this sample. Default is 0.67. NOTE, rejected samples are kept in the output, but 
+#' their predictions and prediction scores are set to NA. Use [LundTaxR::get_qc_report()] to list 
+#' them.
 #' @param verbose A logical value indicating whether processing messages will be printed or not.
 #' Default is TRUE.
 #' @param subtype_only Boolean parameter. Set to TRUE to return subtypes and nothing else. Default
@@ -188,6 +189,9 @@ classify_samples = function(this_data = NULL,
     cat("\n", rep("=", 60), sep = "", "\n")
   }
 
+  #convert to matrix once, all downstream calculations work on the matrix
+  expr_matrix = as.matrix(this_data)
+
   #initiate results object
   results_suburo <- list(data = this_data,
                          subtype_scores = NULL,
@@ -202,7 +206,7 @@ classify_samples = function(this_data = NULL,
   }
 
   prediction = predict_RF(classifier = classifier_lundtax_5c,
-                          Data = this_data,
+                          Data = expr_matrix,
                           impute = impute,
                           impute_reject = impute_reject,
                           impute_kNN = impute_kNN,
@@ -210,8 +214,24 @@ classify_samples = function(this_data = NULL,
 
   #reorder scores
   pred_order = prediction$predictions[,c("Uro","GU","BaSq","Mes","ScNE"), drop = FALSE]
+  
+  #samples rejected by predict_RF (too many missing rules, see impute_reject) are dropped from its 
+  #output, add them back as NA rows so that all samples are kept in the same order as the input
+  rejected_samples = setdiff(colnames(expr_matrix), rownames(pred_order))
+  if(length(rejected_samples) > 0){
+    message(paste0(length(rejected_samples), " sample(s) could not be classified (too many missing genes, see `impute_reject`). ",
+                   "Their predictions are set to NA: ", paste(rejected_samples, collapse = ", ")))
+    full_order = matrix(NA_real_, 
+                        nrow = ncol(expr_matrix), 
+                        ncol = ncol(pred_order),
+                        dimnames = list(colnames(expr_matrix), colnames(pred_order)))
+    full_order[rownames(pred_order), ] = pred_order
+    pred_order = full_order
+  }
+  
   prediction$predictions = pred_order
   prediction$predictions_classes = colnames(pred_order)[max.col(replace(pred_order, is.na(pred_order), -Inf), ties.method = "first")]
+  prediction$predictions_classes[rownames(pred_order) %in% rejected_samples] = NA
 
   subtype_counts_5c <- table(factor(prediction$predictions_classes, levels = c("Uro", "GU", "BaSq", "Mes", "ScNE")))
   
@@ -228,8 +248,7 @@ classify_samples = function(this_data = NULL,
       cat("  2. Subclassifying Uro samples")
     }
 
-    pred_uro = this_data[,which(prediction$predictions_classes == "Uro"), drop = FALSE]
-    pred_nouro = this_data[,which(prediction$predictions_classes != "Uro"), drop = FALSE]
+    pred_uro = expr_matrix[,which(prediction$predictions_classes == "Uro"), drop = FALSE]
 
     prediction_suburo = predict_RF(classifier = classifier_lundtax_7c,
                                    Data = pred_uro,
@@ -241,8 +260,9 @@ classify_samples = function(this_data = NULL,
     suburo_counts <- table(factor(colnames(prediction_suburo$predictions)[max.col(prediction_suburo$predictions)],
                                   levels = c("UroA", "UroB", "UroC")))
 
-    names_uro = colnames(pred_uro)
-    names_all = colnames(this_data)
+    #use the row names returned by predict_RF, since Uro samples can also be rejected at this step
+    names_uro = rownames(prediction_suburo$predictions)
+    names_all = colnames(expr_matrix)
 
     score_matrix = int_merge_suburo_matrix(score_matrix1 = prediction_suburo$predictions,
                                            score_matrix2 = prediction$predictions,
@@ -266,7 +286,7 @@ classify_samples = function(this_data = NULL,
   }
 
   if(!subtype_only){
-    all_scores = int_calc_signatures(this_data = this_data,
+    all_scores = int_calc_signatures(this_data = expr_matrix,
                                      gene_id = gene_id,
                                      threshold_progression = threshold_progression,
                                      threshold_grade = threshold_grade,
@@ -296,7 +316,7 @@ classify_samples = function(this_data = NULL,
   #calculate 7-class prediction delta (UroA, UroB, UroC) only for Uro samples
   prediction_delta_7_class = sapply(1:nrow(score_matrix), function(i) {
     subtype = prediction$predictions_classes[i]
-    if(subtype == "Uro") {
+    if(isTRUE(subtype == "Uro")) {
       uro_scores = score_matrix[i, c("UroA", "UroB", "UroC")]
       valid_scores = sort(uro_scores[!is.na(uro_scores)], decreasing = TRUE)
       if(length(valid_scores) >= 2){
@@ -331,8 +351,13 @@ classify_samples = function(this_data = NULL,
   score_matrix_suburo = score_matrix[,2:4, drop = FALSE]
   score_matrix_5c = score_matrix[,c(1,5:8), drop = FALSE]
 
+  #samples without any prediction score (rejected by predict_RF)
+  not_classified_5c = rowSums(!is.na(score_matrix_5c)) == 0
+  not_classified_7c = rowSums(!is.na(score_matrix_suburo)) == 0
+
   #5 class level
   results_suburo$predictions_5classes = colnames(score_matrix_5c)[max.col(replace(score_matrix_5c,is.na(score_matrix_5c),-Inf), ties.method = "first")]
+  results_suburo$predictions_5classes[not_classified_5c] = NA
 
   #7 class level
   results_suburo$predictions_7classes = results_suburo$predictions_5classes
@@ -340,22 +365,23 @@ classify_samples = function(this_data = NULL,
 
   for(i in 1:length(results_suburo$predictions_7classes)){
     p = results_suburo$predictions_7classes[i]
-    if(p == "Uro"){
-      suburo = max_suburo[i]
+    if(isTRUE(p == "Uro")){
+      #Uro samples rejected by the 7-class classifier get NA at the 7-class level
+      suburo = if(not_classified_7c[i]) NA else max_suburo[i]
       results_suburo$predictions_7classes[i] = suburo
     }
   }
 
-  #score ties
-  first5 = setNames(colnames(score_matrix_5c)[max.col(replace(score_matrix_5c, is.na(score_matrix_5c), -Inf), ties.method = "first")], rownames(score_matrix_5c))
-  last5  = setNames(colnames(score_matrix_5c)[max.col(replace(score_matrix_5c, is.na(score_matrix_5c), -Inf), ties.method = "last")], rownames(score_matrix_5c))
+  #score ties (not checked for samples without prediction scores)
+  first5 = setNames(colnames(score_matrix_5c)[max.col(replace(score_matrix_5c, is.na(score_matrix_5c), -Inf), ties.method = "first")], rownames(score_matrix_5c))[!not_classified_5c]
+  last5  = setNames(colnames(score_matrix_5c)[max.col(replace(score_matrix_5c, is.na(score_matrix_5c), -Inf), ties.method = "last")], rownames(score_matrix_5c))[!not_classified_5c]
 
   if(sum(first5 != last5) > 0){
     int_check_ties(first5,last5)
   }
 
   #7 class level
-  score_matrix_suburo_ties = score_matrix_suburo[!is.na(score_matrix_suburo[,1]),]
+  score_matrix_suburo_ties = score_matrix_suburo[!is.na(score_matrix_suburo[,1]), , drop = FALSE]
   first7 = setNames(colnames(score_matrix_suburo_ties)[max.col(score_matrix_suburo_ties, ties.method = "first")], rownames(score_matrix_suburo_ties))
   last7 = setNames(colnames(score_matrix_suburo_ties)[max.col(score_matrix_suburo_ties, ties.method = "last")], rownames(score_matrix_suburo_ties))
 
@@ -393,6 +419,8 @@ classify_samples = function(this_data = NULL,
     result = results_suburo_nodata
   } else if(include_data == FALSE & include_pred_scores == FALSE){
     result = predictions_suburo
+  } else if(include_data & include_pred_scores == FALSE){
+    result = c(list(data = results_suburo$data), predictions_suburo)
   }
 
   if(verbose){
@@ -411,6 +439,10 @@ classify_samples = function(this_data = NULL,
       if(subtype_counts_5c[st] > 0) {
         cat("    ", st, ": ", subtype_counts_5c[st], " samples\n", sep = "")
       }
+    }
+    
+    if(any(is.na(results_suburo$predictions_7classes))) {
+      cat("    Not classified: ", sum(is.na(results_suburo$predictions_7classes)), " samples\n", sep = "")
     }
     cat(rep("-", 60), "\n", sep = "")
   }

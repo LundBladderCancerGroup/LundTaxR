@@ -71,6 +71,8 @@ plot_subscore_box = function(these_predictions,
   }else if(this_subtype %in% c("UroA", "UroB", "UroC")){
     these_subtypes = data.frame(these_predictions$predictions_7classes)
     subtype_classes = c("UroA", "UroB", "UroC")
+  }else{
+    stop("this_subtype must be one of the following; Uro, GU, BaSq, Mes, ScNE, UroA, UroB or UroC...")
   }
   
   #cnvert rowname to columns
@@ -108,9 +110,6 @@ plot_subscore_box = function(these_predictions,
   
   #get sample IDs for each subtype
   this_melted = dplyr::filter(class_melted, sample_id %in% these_samples$sample_id)
-  
-  #get colour for the subtype to be plotted
-  subtype_col = lund_colors$lund_colors[this_subtype]
   
   #filter the data frame to get rows where subtype is the selected subtype
   subtype_df = this_melted[this_melted$subtype == this_subtype, ]

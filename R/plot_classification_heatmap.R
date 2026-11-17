@@ -32,18 +32,18 @@
 #' @param show_ann_legend Boolean parameter, set to TRUE to show annotation legend (Lund classes). 
 #' Default is FALSE.
 #' @param show_hm_legend Boolean parameter, set to TRUE to show heatmap legend, default is FALSE.
-#' @param ann_height Plotting parameter, optional. Annotation height in cm. Default = 8.
+#' @param ann_height Plotting parameter, optional. Annotation height in cm. Default = 0.5.
 #' @param plot_title Plotting parameter. The title for the generated heatmap. Default is "My Plot".
 #' @param plot_width This parameter controls the width in inches. Default is 14 (4200 pixels at 300 
 #' PPI).
-#' @param plot_height This parameter controls the height in pixels. Default is 10 (3000 pixels at 
+#' @param plot_height This parameter controls the height in inches. Default is 11 (3300 pixels at 
 #' 300 PPI)
 #' @param plot_font_size Optional parameter to control the size of the font in the generated 
 #' heatmap. Note, the title of the plot will always be twice that of the set value here 
 #' (default = 10).
 #' @param plot_font_row_size Optional parameter to control the size of the font in the generated 
 #' heatmap. Note, the title of the plot will always be twice that of the set value here 
-#' (default = 8).
+#' (default = 7).
 #' @param out_path Optional, set path to export plot.
 #' @param out_format Required parameter if `out_path` is specified. Can be "png" (default) or "pdf".
 #' The user can control the dimensions with `plot_width` and `plot_height`.
@@ -78,7 +78,7 @@
 #'
 plot_classification_heatmap = function(these_predictions = NULL,
                                        this_data = NULL,
-                                       gene_id = "hgnc_symbols",
+                                       gene_id = "hgnc_symbol",
                                        subtype_annotation = "5_class",
                                        this_sample_order = NULL,
                                        norm = TRUE,
@@ -113,7 +113,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
   
   #check incoming data and parameter combinations
   if(is.null(these_predictions) | !is.list(these_predictions)){
-    stop("Input should be the result of applying landtax_predict_sub...")
+    stop("Input should be the output from classify_samples()...")
   }else if(is.list(these_predictions) & "data" %in% names(these_predictions)){
     this_data = these_predictions$data
     score_matrix = these_predictions$subtype_scores
@@ -121,7 +121,7 @@ plot_classification_heatmap = function(these_predictions = NULL,
     pred_labels7 = these_predictions$predictions_7classes
   }else if(is.list(these_predictions) & !"data" %in% names(these_predictions)){
     if(is.null(this_data)){
-      stop("Data is missing. Include it in results object by running predict_lundtax with include_data = TRUE or provide it in the this_data argument...")
+      stop("Data is missing. Include it in results object by running classify_samples() with include_data = TRUE or provide it in the this_data argument...")
     }else if(!(class(this_data)[1] %in%  c("matrix","data.frame"))){
       stop("Data should be in matrix or data.frame format")
     }else if(class(this_data)[1] %in%  c("matrix","data.frame")){
@@ -342,21 +342,21 @@ plot_classification_heatmap = function(these_predictions = NULL,
     message("All genes from the early cell cycle signature are missing.
             \nSamples will not be ordered by cell cycle...")
     sample_order = NULL
-    ha1b = NULL
+    hm_a_lateearly = NULL
     row_split = NULL
     row_title_cc = "Late cell cycle"
   }else if(length(genes_early) != 0 & all(is.na(genes_late))){
     message("All genes from the late cell cycle signature are missing.
             \nSamples will not be ordered by cell cycle...")
     sample_order = NULL
-    ha1b = NULL
+    hm_a_lateearly = NULL
     row_split = NULL
     row_title_cc = "Early cell cycle"
   }else{ #both are missing
     message("All genes from the late/early cell cycle signatures are missing.
             \nSamples will not be ordered by cell cycle...")
     sample_order = NULL
-    ha1b = NULL
+    hm_a_lateearly = NULL
     row_split = NULL
     row_title_cc = NULL
   }
@@ -1151,12 +1151,12 @@ plot_classification_heatmap = function(these_predictions = NULL,
   #add signature heatmaps if requested
   if(plot_signature_scores && !is.null(signature_heatmaps)) {
     final_hm = draw(main_heatmaps %v% signature_heatmaps,
-                    column_title_gp = gpar("fontface", fontsize = 24),
+                    column_title_gp = gpar(fontsize = 24),
                     column_title = plot_title,
                     heatmap_width = heatmap_width)
   } else {
     final_hm = draw(main_heatmaps,
-                    column_title_gp = gpar("fontface", fontsize = 24),
+                    column_title_gp = gpar(fontsize = 24),
                     column_title = plot_title,
                     heatmap_width = heatmap_width)
   }

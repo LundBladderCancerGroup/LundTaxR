@@ -23,7 +23,7 @@ int_merge_suburo_matrix = function(score_matrix1,
                                    row.names = list(NULL, NULL)){
   #check inputs
   #matrices
-  if(!(class(score_matrix1)[1] %in% c("matrix","data.frame") & class(score_matrix2) %in%  c("matrix","data.frame"))[1]){
+  if(!(is.matrix(score_matrix1) || is.data.frame(score_matrix1)) || !(is.matrix(score_matrix2) || is.data.frame(score_matrix2))){
     stop("Inputs should be score matrices from a multiclassPairs::rule_based_RandomForest object")
   }
   
@@ -45,6 +45,7 @@ int_merge_suburo_matrix = function(score_matrix1,
   for(i in colnames(final_matrix)){
     if(i %in% colnames(score_matrix1) & i %in% colnames(score_matrix2)){
       message("Classes should be just on one of the provided matrices. Values for duplicate classes will be taken from matrix 1.")
+      final_matrix[rownames(score_matrix1),i] <- score_matrix1[,i]
     }
     else if(i %in% colnames(score_matrix2)){
       final_matrix[rownames(score_matrix2),i] <- score_matrix2[,i]

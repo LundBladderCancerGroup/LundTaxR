@@ -24,6 +24,7 @@
 #' @import ComplexHeatmap circlize
 #' @importFrom RColorBrewer brewer.pal
 #' @importFrom stats na.omit
+#' @importFrom grDevices rainbow
 #' 
 #' @export
 #'

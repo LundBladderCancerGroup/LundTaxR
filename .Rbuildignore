@@ -1,3 +1,7 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+\.DS_Store$
+^CONTRIBUTING\.md$
+^MIGRATION_GUIDE\.md$
+^\.github$

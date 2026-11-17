@@ -51,7 +51,7 @@
 #' metadata or signature score object, to be tested for. If not provided, the function will subset 
 #' data to the signature scores returned with `classify_samples`.
 #' @param exclude_columns Optional argument, specify columns you wish to exclude from the standard 
-#' predictor columns. Note, this parameter is only validated if predictor_columns is NULL (default).
+#' predictor columns. Applies to both the default predictor columns and those given with `predictor_columns`.
 #' @param significant_p Numeric parameter for flagging significant p values. Default is 0.05.
 #' @param sig_color Color for annotating significant signatures. Default is red.
 #' @param sample_id_col Optional parameter. Allows the user to manually specify the name of a column
@@ -70,9 +70,9 @@
 #' @param plot_height This parameter controls the height in inches. Default is 8 (2400 pixels at 300
 #' PPI).
 #' @param plot_order Optional parameter for setting the order of scores in the returned plot. Only 
-#' applies if `arrange_plot` is set to TRUE.
+#' applies if `plot_arrange` is set to TRUE.
 #' @param plot_arrange Boolean parameter, if set to TRUE the user can specify the order of the score
-#' levels on the y axis. Default is FALSE.
+#' levels on the y axis. Default is TRUE.
 #' @param return_data Boolean parameter, set to TRUE and return the formatted data used for plotting.
 #' Default is FALSE
 #'
@@ -171,7 +171,7 @@ plot_ratio_forest = function(these_predictions = NULL,
   }
   
   if(length(this_subtype) > 1){
-    stop("If you want more than one subtype (but not all), it's recommended to provide these as this_surv")
+    stop("Only one subtype at the time is supported. Set this_subtype to NULL to include all samples...")
   }
   
   if(!is.null(this_subtype)){
@@ -190,6 +190,13 @@ plot_ratio_forest = function(these_predictions = NULL,
                           "endothelial_cells", "fibroblasts", 
                           "smooth_muscle", "molecular_grade_who_1999_score", 
                           "molecular_grade_who_2022_score")
+  }
+  
+  #remove excluded columns here, since get_survival() and get_glm() only apply exclude_columns
+  #when predictor_columns is NULL
+  if(!is.null(exclude_columns)){
+    message(paste0("Excluding the following predictor columns: ", paste(exclude_columns, collapse = ", ")))
+    predictor_columns = setdiff(predictor_columns, exclude_columns)
   }
   
   #run get_survival if user has provided prediction data and not survival object
@@ -232,7 +239,9 @@ plot_ratio_forest = function(these_predictions = NULL,
   }else if(!is.null(these_predictions) && !is.null(this_data)){
     message("Both predictions and plot data are provided, function will plot the provided data...")
   }else if(is.null(these_predictions) && !is.null(this_data)){
-    
+    #use the provided plot data as is
+  }else{
+    stop("Provide either these_predictions (together with these_samples_metadata) or this_data...")
   }
   
   #calculate bonferroni
@@ -300,7 +309,7 @@ plot_ratio_forest = function(these_predictions = NULL,
   #build plot
   my_plot = ggplot(this_data, aes(x = ratio, y = score)) +
     geom_point(aes(color = significant), size = 3) +
-    geom_errorbarh(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), height = 0.2) +
+    geom_errorbar(aes(xmin = conf_2.5, xmax = conf_97.5, color = significant), width = 0.2, orientation = "y") +
     geom_vline(xintercept = 1, linetype = "dashed", color = "red") +
     labs(title = plot_title, subtitle = plot_subtitle, x = stat_plot, y = "") +
     scale_color_manual(values = c("significant" = sig_color, "not significant" = "black")) +
