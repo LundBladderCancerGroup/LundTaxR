@@ -55,6 +55,9 @@ reference:
     desc: "Main functions for molecular subtype classification"
     contents:
     - classify_samples
+    - get_qc_report
+    - print.lundtax_qc
+    - plot_qc_report
     - lundtax_predict_sub
     - predict_LundTax2023
     
