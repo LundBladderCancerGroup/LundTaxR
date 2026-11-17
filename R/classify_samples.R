@@ -393,6 +393,8 @@ classify_samples = function(this_data = NULL,
     result = results_suburo_nodata
   } else if(include_data == FALSE & include_pred_scores == FALSE){
     result = predictions_suburo
+  } else if(include_data & include_pred_scores == FALSE){
+    result = c(list(data = results_suburo$data), predictions_suburo)
   }
 
   if(verbose){

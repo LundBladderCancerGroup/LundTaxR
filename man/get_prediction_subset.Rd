@@ -21,7 +21,7 @@ extracted from \code{these_samples_metadata}.}
 \code{these_sample_ids} is NULL, sample IDs will be extracted from this data frame.}
 
 \item{samples_rownames}{A logical value indicating whether the sample IDs are stored in the row
-names of \code{these_samples_metadata}. Default is TRUE.}
+names of \code{these_samples_metadata}. Default is FALSE.}
 }
 \value{
 A list with the same structure as \code{these_predictions}, but subset to the specified

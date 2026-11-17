@@ -1,3 +1,4 @@
 docs
 *.html
 vignettes/*.html
+.DS_Store

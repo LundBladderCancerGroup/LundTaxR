@@ -116,7 +116,7 @@ get_glm = function(these_predictions = NULL,
       if(any(!exclude_columns %in% colnames(this_object))){
         stop("One or more columns specified in exclude_columns is not in the incoming data...")
       }else{
-        message(paste0("Excluding the following predictor columns: ", exclude_columns))
+        message(paste0("Excluding the following predictor columns: ", paste(exclude_columns, collapse = ", ")))
         these_columns = setdiff(these_columns, exclude_columns) 
       }
     }
@@ -132,6 +132,7 @@ get_glm = function(these_predictions = NULL,
                           odds_ratio = numeric(),
                           conf_2.5 = numeric(),
                           conf_97.5 = numeric(),
+                          variable = character(),
                           subtype = factor())
     return(empty_df)
   }

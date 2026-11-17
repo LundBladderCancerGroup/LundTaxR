@@ -27,7 +27,7 @@ Imports:
     ComplexHeatmap,
     cowplot,
     dplyr,
-    ggplot2,
+    ggplot2 (>= 3.4.0),
     ggpubr,
     grDevices,
     grid,
@@ -38,11 +38,13 @@ Imports:
     reshape2,
     survival,
     tibble,
+    tidyr,
     lifecycle,
     RColorBrewer
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 License: GPL (>= 2) + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -16,7 +16,7 @@
 #' @param these_samples_metadata A data frame containing sample metadata. If provided and 
 #' `these_sample_ids` is NULL, sample IDs will be extracted from this data frame.
 #' @param samples_rownames A logical value indicating whether the sample IDs are stored in the row 
-#' names of `these_samples_metadata`. Default is TRUE.
+#' names of `these_samples_metadata`. Default is FALSE.
 #'
 #' @return A list with the same structure as `these_predictions`, but subset to the specified 
 #' sample IDs.
@@ -64,6 +64,10 @@ get_prediction_subset = function(these_predictions = NULL,
     stop("The 'these_predictions' object does not contain a 'data' component. \n  Please ensure that the 'classify_samples' function was run with 'include_data = TRUE'.")
   }
 
+  if(is.null(these_samples_metadata) && is.null(these_sample_ids)){
+    stop("Provide sample IDs with `these_sample_ids`, or a metadata data frame with `these_samples_metadata`...")
+  }
+  
   if(!is.null(these_samples_metadata) && is.null(these_sample_ids)){
     message("Metadata provided, the function will subset to the sample IDs in this object...")
     if(!samples_rownames){

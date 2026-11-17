@@ -57,7 +57,7 @@ int_calc_score = function(this_data = NULL,
       select(signature, !!as.symbol(gene_id))
   }
 
-  #subset expression data to relevant prostate genes
+  #subset expression data to relevant genes
   genes_int = this_data %>%
     dplyr::filter(rownames(this_data) %in% unique(these_signatures[,gene_id]))
 
